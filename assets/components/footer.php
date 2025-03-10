@@ -1,6 +1,6 @@
 <footer class="bg-gray-100 dark:bg-gray-900 transition duration-300 mt-16">
-    <div class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="container mx-auto px-8 md:px-12 py-12"> <!-- Added matching padding to header -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- Changed to 3 columns -->
             <!-- About -->
             <div class="col-span-1">
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Pay</h3>
@@ -29,19 +29,6 @@
                     <li><a href="/pricing" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">Pricing</a></li>
                     <li><a href="/about" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">About</a></li>
                     <li><a href="/contact" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">Contact</a></li>
-                </ul>
-            </div>
-            
-            <!-- Powered Websites -->
-            <div class="col-span-1">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Websites Using Pay</h3>
-                <ul class="space-y-2">
-                    <li><a href="https://shubkb.com" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">shubkb.com</a></li>
-                    <li><a href="https://shubkb.me" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">shubkb.me</a></li>
-                    <li><a href="https://shubkb.in" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">shubkb.in</a></li>
-                    <li><a href="https://sh6.me" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">sh6.me</a></li>
-                    <li><a href="https://sync.org.in" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">sync.org.in</a></li>
-                    <li><a href="https://chrome.google.com/webstore" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">WEhizzy Extension</a></li>
                 </ul>
             </div>
             

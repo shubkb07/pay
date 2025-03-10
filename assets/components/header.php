@@ -1,5 +1,5 @@
 <header class="sticky top-0 w-full bg-white dark:bg-gray-900 shadow-md transition duration-300 z-50">
-    <div class="container mx-auto px-4 py-4">
+    <div class="container mx-auto px-8 md:px-12 py-4"> <!-- Increased horizontal padding -->
         <div class="flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center">
