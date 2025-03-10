@@ -2,32 +2,11 @@ import {app} from './app.js';
 
 const homePage = {
     init() {
-        // Initialize hero animation
-        this.initHeroAnimation();
-        
         // Initialize section animations
         this.initSectionAnimations();
-    },
-    
-    initHeroAnimation() {
-        if (app.dom.heroTitle) {
-            // Add fade-in animation class
-            app.dom.heroTitle.classList.add('animate-fade-in');
-        }
         
-        if (app.dom.heroSubtitle) {
-            // Delayed fade-in for subtitle
-            setTimeout(() => {
-                app.dom.heroSubtitle.classList.add('animate-fade-in');
-            }, 300);
-        }
-        
-        if (app.dom.heroButtons) {
-            // Delayed fade-in for buttons
-            setTimeout(() => {
-                app.dom.heroButtons.classList.add('animate-fade-in');
-            }, 600);
-        }
+        // Enable smooth scrolling for anchor links
+        this.initSmoothScroll();
     },
     
     initSectionAnimations() {
@@ -38,16 +17,60 @@ const homePage = {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
+                        // Add animation to the section itself
                         entry.target.classList.add('animate-fade-in-up');
+                        
+                        // Find child elements to animate with staggered delays
+                        const animatedChildren = entry.target.querySelectorAll('.grid > div, .flex > div, h2, h3, p, .grid > a');
+                        
+                        if (animatedChildren.length) {
+                            Array.from(animatedChildren).forEach((el, index) => {
+                                setTimeout(() => {
+                                    el.classList.add('animate-fade-in-up');
+                                }, index * 100); // Stagger by 100ms
+                            });
+                        }
+                        
+                        // Stop observing after animation
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.2 });
+            }, { 
+                threshold: 0.1,  // Trigger when 10% of element is visible
+                rootMargin: '0px 0px -10% 0px' // Trigger slightly before element enters viewport
+            });
             
             sections.forEach(section => {
+                // Make children initially invisible
+                const animatedChildren = section.querySelectorAll('.grid > div, .flex > div, h2, h3, p, .grid > a');
+                Array.from(animatedChildren).forEach(el => {
+                    el.style.opacity = '0';
+                });
+                
+                // Observe the section
                 observer.observe(section);
             });
         }
+    },
+    
+    initSmoothScroll() {
+        // Handle anchor links with smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // Offset for header
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     }
 };
 

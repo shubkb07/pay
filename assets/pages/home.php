@@ -17,10 +17,12 @@
     <link rel="stylesheet" href="<?php echo ASSETS_URL . 'css/fontawesome.css'; ?>">
     <style>
         .animate-fade-in {
-            animation: fadeIn 0.8s ease-in-out;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in-out forwards;
         }
         .animate-fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -36,6 +38,11 @@
                 transform: translateY(0);
             }
         }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300">
@@ -45,13 +52,13 @@
     <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-24">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 id="pay-hero-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0">
+                <h1 id="pay-hero-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
                     Simplified Payment Solutions
                 </h1>
-                <p id="pay-hero-subtitle" class="text-xl md:text-2xl mb-8 text-blue-100 opacity-0">
+                <p id="pay-hero-subtitle" class="text-xl md:text-2xl mb-8 text-blue-100 animate-fade-in delay-200">
                     Easy payment tracking, secure payment links, and seamless integration with PayU
                 </p>
-                <div id="pay-hero-buttons" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 opacity-0">
+                <div id="pay-hero-buttons" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in delay-400">
                     <a href="#how-it-works" class="bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold shadow-lg transition">
                         How It Works
                     </a>
@@ -63,7 +70,7 @@
         </div>
         
         <div class="container mx-auto px-4 mt-12">
-            <div class="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+            <div class="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden animate-fade-in delay-500">
                 <div class="flex flex-col md:flex-row items-center p-8">
                     <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
                         <div class="text-center md:text-left">
@@ -83,7 +90,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20" id="how-it-works">
+    <section class="py-20 animate-on-scroll" id="how-it-works">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 animate-on-scroll">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
@@ -127,7 +134,7 @@
     </section>
 
     <!-- Integration Section -->
-    <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <section class="py-16 bg-gray-50 dark:bg-gray-900 animate-on-scroll">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto animate-on-scroll">
                 <div class="flex flex-col md:flex-row items-center">
@@ -153,7 +160,7 @@
     </section>
 
     <!-- Websites Using Pay Section -->
-    <section class="py-16">
+    <section class="py-16 animate-on-scroll">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12 animate-on-scroll">
                 <h2 class="text-3xl font-bold mb-4">Websites Using Pay</h2>
@@ -186,7 +193,7 @@
     </section>
 
     <!-- How it Works Section -->
-    <section class="py-16 bg-blue-50 dark:bg-gray-900">
+    <section class="py-16 bg-blue-50 dark:bg-gray-900 animate-on-scroll">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 animate-on-scroll">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">How Pay Works</h2>
