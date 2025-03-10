@@ -31,7 +31,7 @@ if (count($path) > 0) {
             echo '</pre>';
         } elseif ($path[0] === 'o') {
             echo '<pre>';
-            print_r(fetch_options());
+            print_r(get_option('payu_mid'));
             echo '</pre>';
         } else {
             include_once ASSETS . 'pages/404.php';
