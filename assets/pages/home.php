@@ -48,6 +48,24 @@
         .sticky-header-offset {
             scroll-margin-top: 5rem;
         }
+
+        /* Card hover animations */
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(10deg);
+        }
+        
+        /* Add group hover functionality */
+        .group:hover .group-hover\:rotate-12 {
+            transform: rotate(12deg);
+        }
+        
+        .group:hover .group-hover\:text-blue-700 {
+            color: #1d4ed8;
+        }
+        
+        .dark .group:hover .dark\:group-hover\:text-blue-300 {
+            color: #93c5fd;
+        }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300">
@@ -105,31 +123,31 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once card">
-                    <div class="text-blue-600 dark:text-blue-400 mb-4">
-                        <i class="fas fa-link fa-3x hover:rotate-12 transition duration-300 transform"></i>
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-300 transform appear-once card">
+                    <div class="text-blue-600 dark:text-blue-400 mb-4 group">
+                        <i class="fas fa-link fa-3x group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition duration-300 transform"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Payment Links</h3>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300">Payment Links</h3>
                     <p class="text-gray-600 dark:text-gray-400">
                         Create customized payment links to share with your customers via email, SMS, or social media.
                     </p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once card">
-                    <div class="text-blue-600 dark:text-blue-400 mb-4">
-                        <i class="fas fa-credit-card fa-3x hover:rotate-12 transition duration-300 transform"></i>
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-300 transform appear-once card">
+                    <div class="text-blue-600 dark:text-blue-400 mb-4 group">
+                        <i class="fas fa-credit-card fa-3x group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition duration-300 transform"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Payment Records</h3>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300">Payment Records</h3>
                     <p class="text-gray-600 dark:text-gray-400">
                         Keep track of all your transactions in one place with detailed payment records and analytics.
                     </p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once card">
-                    <div class="text-blue-600 dark:text-blue-400 mb-4">
-                        <i class="fas fa-tags fa-3x hover:rotate-12 transition duration-300 transform"></i>
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-300 transform appear-once card">
+                    <div class="text-blue-600 dark:text-blue-400 mb-4 group">
+                        <i class="fas fa-tags fa-3x group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition duration-300 transform"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Promo Codes</h3>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300">Promo Codes</h3>
                     <p class="text-gray-600 dark:text-gray-400">
                         Create and manage discount codes, offers, and coupons to boost your sales and customer loyalty.
                     </p>
@@ -175,22 +193,22 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 max-w-4xl mx-auto">
-                <a href="https://shubkb.com" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 text-center transition duration-300 transform appear-once">
+                <a href="https://shubkb.com" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">shubkb.com</div>
                 </a>
-                <a href="https://shubkb.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 text-center transition duration-300 transform appear-once">
+                <a href="https://shubkb.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">shubkb.me</div>
                 </a>
-                <a href="https://shubkb.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 text-center transition duration-300 transform appear-once">
+                <a href="https://shubkb.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">shubkb.in</div>
                 </a>
-                <a href="https://sh6.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 text-center transition duration-300 transform appear-once">
+                <a href="https://sh6.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">sh6.me</div>
                 </a>
-                <a href="https://sync.org.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 text-center transition duration-300 transform appear-once">
+                <a href="https://sync.org.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">sync.org.in</div>
                 </a>
-                <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 text-center transition duration-300 transform appear-once">
+                <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">WEhizzy</div>
                 </a>
             </div>
@@ -209,7 +227,7 @@
             
             <div class="max-w-5xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 transition duration-300 transform appear-once">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card">
                         <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span class="text-blue-600 dark:text-blue-400 text-2xl font-bold">1</span>
                         </div>
@@ -219,7 +237,7 @@
                         </p>
                     </div>
                     
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 transition duration-300 transform appear-once">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card">
                         <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span class="text-blue-600 dark:text-blue-400 text-2xl font-bold">2</span>
                         </div>
@@ -229,7 +247,7 @@
                         </p>
                     </div>
                     
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 transition duration-300 transform appear-once">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card">
                         <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span class="text-blue-600 dark:text-blue-400 text-2xl font-bold">3</span>
                         </div>

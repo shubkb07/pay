@@ -44,33 +44,48 @@ const app = {
 	mobileMenu: {
 		init() {
 			if (app.dom.mobileMenuButton) {
-				app.dom.mobileMenuButton.addEventListener('click', app.mobileMenu.toggle);
+				app.dom.mobileMenuButton.addEventListener('click', (e) => {
+					e.stopPropagation(); // Prevent event from bubbling to document
+					app.mobileMenu.toggle();
+				});
 			}
 			
 			// Add click event for overlay to close menu
 			if (app.dom.mobileMenuOverlay) {
-				app.dom.mobileMenuOverlay.addEventListener('click', app.mobileMenu.close);
+				app.dom.mobileMenuOverlay.addEventListener('click', (e) => {
+					e.stopPropagation(); // Prevent event from bubbling
+					app.mobileMenu.close();
+				});
 			}
 			
 			// Add event listener for pressing escape key
 			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape') {
+				if (e.key === 'Escape' && app.dom.mobileMenu && !app.dom.mobileMenu.classList.contains('hidden')) {
 					app.mobileMenu.close();
 				}
 			});
 			
-			// Add event listener for clicks outside menu
+			// Add event listener for clicks on document to close menu
 			document.addEventListener('click', (e) => {
+				// Close menu when clicking outside of it (and not on the menu button)
 				if (app.dom.mobileMenu && 
+					!app.dom.mobileMenu.classList.contains('hidden') && 
 					!app.dom.mobileMenu.contains(e.target) && 
-					!app.dom.mobileMenuButton.contains(e.target) && 
-					!app.dom.mobileMenu.classList.contains('hidden')) {
+					app.dom.mobileMenuButton && 
+					!app.dom.mobileMenuButton.contains(e.target)) {
 					app.mobileMenu.close();
 				}
 			});
+			
+			// Prevent clicks inside the menu from closing it
+			if (app.dom.mobileMenu) {
+				app.dom.mobileMenu.addEventListener('click', (e) => {
+					e.stopPropagation(); // Prevent event from bubbling to document
+				});
+			}
 		},
 		toggle() {
-			const isVisible = !app.dom.mobileMenu.classList.contains('hidden');
+			const isVisible = app.dom.mobileMenu && !app.dom.mobileMenu.classList.contains('hidden');
 			
 			if (isVisible) {
 				app.mobileMenu.close();
@@ -79,25 +94,31 @@ const app = {
 			}
 		},
 		open() {
-			app.dom.mobileMenu.classList.remove('hidden');
-			app.dom.mobileMenuOverlay.classList.remove('hidden');
-			document.body.classList.add('overflow-hidden');
-			
-			const icon = app.dom.mobileMenuButton.querySelector('i');
-			if (icon) {
-				icon.classList.remove('fa-bars');
-				icon.classList.add('fa-times');
+			if (app.dom.mobileMenu && app.dom.mobileMenuOverlay) {
+				app.dom.mobileMenu.classList.remove('hidden');
+				app.dom.mobileMenuOverlay.classList.remove('hidden');
+				
+				// Don't add overflow-hidden to body as it can cause content shifting
+				// Instead, the overlay will prevent scrolling visually
+				
+				const icon = app.dom.mobileMenuButton.querySelector('i');
+				if (icon) {
+					icon.classList.remove('fa-bars');
+					icon.classList.add('fa-times');
+				}
 			}
 		},
 		close() {
-			app.dom.mobileMenu.classList.add('hidden');
-			app.dom.mobileMenuOverlay.classList.add('hidden');
-			document.body.classList.remove('overflow-hidden');
-			
-			const icon = app.dom.mobileMenuButton.querySelector('i');
-			if (icon) {
-				icon.classList.remove('fa-times');
-				icon.classList.add('fa-bars');
+			if (app.dom.mobileMenu && app.dom.mobileMenuOverlay) {
+				app.dom.mobileMenu.classList.add('hidden');
+				app.dom.mobileMenuOverlay.classList.add('hidden');
+				document.body.classList.remove('overflow-hidden');
+				
+				const icon = app.dom.mobileMenuButton.querySelector('i');
+				if (icon) {
+					icon.classList.remove('fa-times');
+					icon.classList.add('fa-bars');
+				}
 			}
 		}
 	},
