@@ -25,6 +25,8 @@ if (count($path) > 0) {
             include_once ASSETS . 'pages/success.php';
         } elseif ($path[0] === 'f') {
             include_once ASSETS . 'pages/failed.php';
+        } elseif ($path[0] === 'ct') {
+            create_tables();
         } else {
             include_once ASSETS . 'pages/404.php';
         }

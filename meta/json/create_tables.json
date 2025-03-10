@@ -1,0 +1,42 @@
+[
+    {
+        "options": {
+            "columns": {
+                "option_id": {
+                    "type": "bigint",
+                    "unsigned": true,
+                    "nullable": false,
+                    "autoIncrement": true,
+                    "primary": true
+                },
+                "option_name": {
+                    "type": "varchar",
+                    "length": 191,
+                    "nullable": false,
+                    "default": ""
+                },
+                "option_value": {
+                    "type": "longtext",
+                    "nullable": true
+                },
+                "autoload": {
+                    "type": "varchar",
+                    "length": 20,
+                    "nullable": false,
+                    "default": "yes"
+                }
+            },
+            "indexes": {
+                "option_name": {
+                    "type": "unique",
+                    "columns": "option_name"
+                }
+            },
+            "engine": "InnoDB",
+            "charset": "utf8mb4",
+            "collate": "utf8mb4_unicode_ci",
+            "comment": "System options and settings",
+            "ifNotExists": true
+        }
+    }
+]

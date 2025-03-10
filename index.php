@@ -52,6 +52,8 @@ spl_autoload_register(
 $functions = array(
               'escape.php',
               'prepare.php',
+              'create_tables.php',
+              'options.php',
               'path.php',
              );
 
@@ -61,4 +63,3 @@ foreach ($functions as $function) {
         include_once INC . 'functions/' . $function;
     }
 }
-
