@@ -24,17 +24,7 @@
             animation: checkmark 0.8s ease-in-out forwards;
         }
     </style>
-    <script>
-        // Add payment data for the status.js script
-        window.paymentData = {
-            // This will be replaced by PHP with actual data
-            <?php if(isset($redirectUrl)): ?>
-            redirect_to: "<?php echo htmlspecialchars($redirectUrl); ?>",
-            <?php endif; ?>
-            status: "success",
-            transaction_id: "<?php echo isset($transactionId) ? htmlspecialchars($transactionId) : ''; ?>"
-        };
-    </script>
+    <!-- Removed window.paymentData script block -->
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300 flex flex-col min-h-screen">
     <?php include_once ASSETS . 'components/header.php'; ?>
@@ -55,18 +45,8 @@
                 </p>
                 
                 <div id="pay-transaction-details" class="max-w-sm mx-auto bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6 text-left">
-                    <p class="flex justify-between mb-2">
-                        <span class="text-gray-600 dark:text-gray-300">Transaction ID:</span>
-                        <span id="pay-transaction-id" class="font-medium text-gray-900 dark:text-gray-100">
-                            <?php echo isset($transactionId) ? htmlspecialchars($transactionId) : 'N/A'; ?>
-                        </span>
-                    </p>
-                    <p class="flex justify-between mb-2">
-                        <span class="text-gray-600 dark:text-gray-300">Date:</span>
-                        <span id="pay-transaction-date" class="font-medium text-gray-900 dark:text-gray-100">
-                            <?php echo date('M d, Y H:i'); ?>
-                        </span>
-                    </p>
+                    <!-- Transaction details will be populated by JavaScript from CDATA -->
+                    <p class="text-center text-gray-500 dark:text-gray-400">Loading transaction details...</p>
                 </div>
                 
                 <div id="pay-redirect-section" class="hidden"> <!-- Will be shown by JavaScript if redirect is available -->
@@ -81,8 +61,6 @@
                         </a>
                     </div>
                 </div>
-                
-                <!-- Removed "Back to Home" link -->
             </div>
         </div>
     </main>
@@ -90,13 +68,14 @@
     <script type="text/javascript">
     //<![CDATA[
     var data = {
+        "status": "success",
         "transaction": {
             "Transaction ID": "PAY1234567890",
             "Date": "Jan 01, 2022 12:00",
             "Amount": "₹ 100.00",
             "Status": "Success",
             "Payment Method": "Credit Card"
-        },
+        }
     };
     //]]>
     </script>

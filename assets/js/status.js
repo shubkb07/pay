@@ -14,87 +14,82 @@ document.addEventListener('DOMContentLoaded', () => {
             errorDetails: document.getElementById('pay-error-details')
         },
         
-        // Payment data from the page
-        paymentData: window.paymentData || {},
-        
-        // Transaction data from CDATA
-        transactionData: window.data || {},
+        // Get all data from CDATA
+        data: window.data || {},
         
         // Countdown timer
         timer: null,
         secondsLeft: 30,
         
         init() {
-            // Check if we have redirect data
-            if (this.paymentData && this.paymentData.redirect_to) {
-                this.initRedirect(this.paymentData.redirect_to);
+            // Set page title based on status
+            if (this.data.status) {
+                document.title = this.data.status === 'success' 
+                    ? 'Payment Successful - Pay' 
+                    : 'Payment Failed - Pay';
             }
             
-            // Initialize animations based on status
-            this.initStatusSpecificFeatures();
-            
-            // Process transaction data from CDATA
+            // Process transaction data
             this.processTransactionData();
+            
+            // Check if we have redirect data
+            if (this.data.redirect_to) {
+                this.initRedirect(this.data.redirect_to);
+            }
         },
         
         processTransactionData() {
-            // Check if we have transaction data from CDATA
-            if (this.transactionData && this.transactionData.transaction) {
-                const transaction = this.transactionData.transaction;
+            // Check if we have transaction data
+            if (!this.data.transaction) return;
+            
+            const transaction = this.data.transaction;
+            
+            if (this.data.status === 'success' && this.elements.transactionDetails) {
+                // Clear existing content
+                this.elements.transactionDetails.innerHTML = '';
                 
-                // For success page: Display transaction details
-                if (this.elements.transactionDetails && this.paymentData.status === 'success') {
-                    // Clear existing content
-                    this.elements.transactionDetails.innerHTML = '';
-                    
-                    // Add each transaction field dynamically
-                    Object.entries(transaction).forEach(([key, value]) => {
-                        const row = document.createElement('p');
-                        row.className = 'flex justify-between mb-2';
-                        row.innerHTML = `
-                            <span class="text-gray-600 dark:text-gray-300">${key}:</span>
-                            <span class="font-medium text-gray-900 dark:text-blue-300">${value}</span>
-                        `;
-                        this.elements.transactionDetails.appendChild(row);
-                    });
+                // Add each transaction field dynamically
+                Object.entries(transaction).forEach(([key, value]) => {
+                    const row = document.createElement('p');
+                    row.className = 'flex justify-between mb-2';
+                    row.innerHTML = `
+                        <span class="text-gray-600 dark:text-gray-300">${key}:</span>
+                        <span class="font-medium text-gray-900 dark:text-blue-300">${value}</span>
+                    `;
+                    this.elements.transactionDetails.appendChild(row);
+                });
+            } 
+            else if (this.data.status === 'failed' && this.elements.errorDetails) {
+                // Clear existing content
+                this.elements.errorDetails.innerHTML = '';
+                
+                // Add error message if available
+                if (transaction['Error Message']) {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'text-red-700 dark:text-red-300 mb-3';
+                    errorMsg.innerHTML = `<span class="font-medium">Error:</span> ${transaction['Error Message']}`;
+                    this.elements.errorDetails.appendChild(errorMsg);
                 }
                 
-                // For failed page: Display error details
-                if (this.elements.errorDetails && this.paymentData.status === 'failed') {
-                    // Clear existing content
-                    this.elements.errorDetails.innerHTML = '';
+                // Add each transaction field dynamically
+                Object.entries(transaction).forEach(([key, value]) => {
+                    // Skip adding Error Message again since we already added it
+                    if (key === 'Error Message') return;
                     
-                    // Add error details
-                    if (transaction.Status && transaction.Status === 'Failed') {
-                        const errorMsg = document.createElement('p');
-                        errorMsg.className = 'text-red-700 dark:text-red-300 mb-3';
-                        errorMsg.innerHTML = `<span class="font-medium">Payment Failed</span>`;
-                        this.elements.errorDetails.appendChild(errorMsg);
-                    }
-                    
-                    // Add transaction details as error info
-                    Object.entries(transaction).forEach(([key, value]) => {
-                        const row = document.createElement('p');
-                        row.className = 'flex justify-between text-sm mb-2';
-                        row.innerHTML = `
-                            <span class="text-gray-600 dark:text-gray-300">${key}:</span>
-                            <span class="text-gray-700 dark:text-gray-200">${value}</span>
-                        `;
-                        this.elements.errorDetails.appendChild(row);
-                    });
-                    
-                    // Add error code if available
-                    if (this.paymentData.error_code) {
-                        const errorCode = document.createElement('p');
-                        errorCode.className = 'text-gray-600 dark:text-gray-400 text-sm mt-2';
-                        errorCode.innerHTML = `Error Code: ${this.paymentData.error_code}`;
-                        this.elements.errorDetails.appendChild(errorCode);
-                    }
-                }
+                    const row = document.createElement('p');
+                    row.className = 'flex justify-between text-sm mb-2';
+                    row.innerHTML = `
+                        <span class="text-gray-600 dark:text-gray-300">${key}:</span>
+                        <span class="text-gray-700 dark:text-gray-200">${value}</span>
+                    `;
+                    this.elements.errorDetails.appendChild(row);
+                });
             }
         },
         
         initRedirect(url) {
+            if (!url) return;
+            
             // Show the redirect section
             if (this.elements.redirectSection) {
                 this.elements.redirectSection.classList.remove('hidden');
@@ -129,30 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = url;
                 }
             }, 1000);
-        },
-        
-        initStatusSpecificFeatures() {
-            // Apply specific behaviors based on payment status
-            if (this.paymentData.status === 'success') {
-                document.title = 'Payment Successful - Pay';
-                
-                // Add transaction ID if available but not yet in the DOM
-                if (this.paymentData.transaction_id && document.getElementById('pay-transaction-id')) {
-                    document.getElementById('pay-transaction-id').textContent = this.paymentData.transaction_id;
-                }
-            } 
-            else if (this.paymentData.status === 'failed') {
-                document.title = 'Payment Failed - Pay';
-                
-                // Add error details if available
-                const errorDetails = document.getElementById('pay-error-details');
-                if (errorDetails && this.paymentData.error_message && !errorDetails.textContent.includes(this.paymentData.error_message)) {
-                    const errorElem = document.createElement('p');
-                    errorElem.className = 'text-red-700 dark:text-red-400 mb-2';
-                    errorElem.innerHTML = `<span class="font-medium">Error:</span> ${this.paymentData.error_message}`;
-                    errorDetails.appendChild(errorElem);
-                }
-            }
         }
     };
     

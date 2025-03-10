@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Failed Page - Shown after failed payment
  */
+
 ?>
 
 <!DOCTYPE html>
@@ -24,18 +26,7 @@
             animation: errorPulse 0.8s ease-in-out forwards;
         }
     </style>
-    <script>
-        // Add payment data for the status.js script
-        window.paymentData = {
-            // This will be replaced by PHP with actual data
-            <?php if(isset($redirectUrl)): ?>
-            redirect_to: "<?php echo htmlspecialchars($redirectUrl); ?>",
-            <?php endif; ?>
-            status: "failed",
-            error_code: "<?php echo isset($errorCode) ? htmlspecialchars($errorCode) : ''; ?>",
-            error_message: "<?php echo isset($errorMessage) ? htmlspecialchars($errorMessage) : ''; ?>"
-        };
-    </script>
+    <!-- Removed window.paymentData script block -->
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300 flex flex-col min-h-screen">
     <?php include_once ASSETS . 'components/header.php'; ?>
@@ -56,17 +47,8 @@
                 </p>
                 
                 <div id="pay-error-details" class="max-w-sm mx-auto bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-4 mb-6 text-left">
-                    <?php if(isset($errorMessage) && !empty($errorMessage)): ?>
-                    <p class="text-red-700 dark:text-red-300 mb-2">
-                        <span class="font-medium">Error:</span> <?php echo htmlspecialchars($errorMessage); ?>
-                    </p>
-                    <?php endif; ?>
-                    
-                    <?php if(isset($errorCode) && !empty($errorCode)): ?>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm">
-                        Code: <?php echo htmlspecialchars($errorCode); ?>
-                    </p>
-                    <?php endif; ?>
+                    <!-- Error details will be populated by JavaScript from CDATA -->
+                    <p class="text-center text-gray-500 dark:text-gray-400">Loading error details...</p>
                 </div>
                 
                 <div id="pay-redirect-section" class="hidden"> <!-- Will be shown by JavaScript if redirect is available -->
@@ -85,15 +67,19 @@
         </div>
     </main>
     
-	<script type="text/javascript">
+    <script type="text/javascript">
     //<![CDATA[
     var data = {
+        "status": "failed",
+        "redirect_to": "https://example.com/payment-failed", // This will be replaced with actual redirect URL
         "transaction": {
             "Transaction ID": "PAY1234567890",
             "Date": "Jan 01, 2022 12:00",
             "Amount": "₹ 100.00",
             "Status": "Failed",
-        },
+            "Error Code": "ERR-1001",
+            "Error Message": "Your payment was declined by the bank. Please try another card."
+        }
     };
     //]]>
     </script>
