@@ -5,4 +5,20 @@
  */
 
 $path = explode('/', $_GET['path'] ?? '');
-var_dump($path);
+
+/*
+ * Single Path.
+ */
+
+if (count($path) > 0) {
+    if ($path[0] === 'home' || $path[0] === '') {
+        include_once ASSETS . 'html/home.php';
+    } elseif ($path[0] === 'about') {
+        include_once ASSETS . 'html/about.php';
+    } elseif ($path[0] === 'contact') {
+        include_once ASSETS . 'html/contact.php';
+    } else {
+        include_once ASSETS . 'html/404.php';
+    }
+}
+die();

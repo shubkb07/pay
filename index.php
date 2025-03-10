@@ -14,7 +14,6 @@
  */
 
 ! defined('ABSPATH') && exit;
-define('INC', ABSPATH . 'includes/');
 
 // Autoload Classes.
 spl_autoload_register(
