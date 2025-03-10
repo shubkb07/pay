@@ -30,6 +30,8 @@ function create_tables() {
                                    ];
         }
     }
-
+echo '<pre>';
+print_r($result);
+echo '</pre>';
     return $result;
 }
