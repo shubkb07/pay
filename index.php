@@ -18,4 +18,10 @@ define('INC', ABSPATH . 'includes/');
 
 // Load Functions.
 $functions = scandir(INC . 'functions');
-var_dump($functions);
+
+// Loop through the functions directory and include all files.
+foreach ($functions as $function) {
+    if (strpos($function, '.php') !== false) {
+        include_once INC . 'functions/' . $function;
+    }
+}
