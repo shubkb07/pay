@@ -13,6 +13,3 @@
  */
 
 ! defined('ABSPATH') && exit;
-echo 'test';
-echo '<br>';
-echo ABSPATH;
