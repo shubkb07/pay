@@ -4,5 +4,5 @@
  * Path Declaration.
  */
 
-$path = $_GET['path'] ?? '';
+$path = explode('/', $_GET['path'] ?? '');
 echo $path;
