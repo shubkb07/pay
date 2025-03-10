@@ -43,6 +43,11 @@
         .delay-300 { animation-delay: 0.3s; }
         .delay-400 { animation-delay: 0.4s; }
         .delay-500 { animation-delay: 0.5s; }
+        
+        /* Add this to ensure proper spacing with sticky header */
+        .sticky-header-offset {
+            scroll-margin-top: 5rem;
+        }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300">
@@ -90,7 +95,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20" id="how-it-works">
+    <section class="py-20 sticky-header-offset" id="how-it-works">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 appear-once">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
@@ -100,7 +105,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once card">
                     <div class="text-blue-600 dark:text-blue-400 mb-4">
                         <i class="fas fa-link fa-3x hover:rotate-12 transition duration-300 transform"></i>
                     </div>
@@ -110,7 +115,7 @@
                     </p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once card">
                     <div class="text-blue-600 dark:text-blue-400 mb-4">
                         <i class="fas fa-credit-card fa-3x hover:rotate-12 transition duration-300 transform"></i>
                     </div>
@@ -120,7 +125,7 @@
                     </p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition duration-300 transform appear-once card">
                     <div class="text-blue-600 dark:text-blue-400 mb-4">
                         <i class="fas fa-tags fa-3x hover:rotate-12 transition duration-300 transform"></i>
                     </div>
