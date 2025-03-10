@@ -25,13 +25,11 @@ function create_tables() {
             $result[$table_name] = $table_result;
         } catch (Exception $e) {
             $result[$table_name] = [
-                                    'error'  => $e->getMessage(),
-                                    'result' => false,
-                                   ];
+                'error'  => $e->getMessage(),
+                'result' => false,
+            ];
         }
     }
-echo '<pre>';
-print_r($result);
-echo '</pre>';
+
     return $result;
 }
