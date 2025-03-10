@@ -54,6 +54,7 @@ $functions = array(
               'prepare.php',
               'create_tables.php',
               'options.php',
+              'postload.php',
               'path.php',
              );
 

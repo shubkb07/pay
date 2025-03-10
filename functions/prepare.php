@@ -4,7 +4,6 @@
  * Load classes arrange pre defined functions.
  */
 
-use Pay\{Db, Pay};
+use Pay\{Db};
 
 $db = new Db();
-// $pay = new Pay();
