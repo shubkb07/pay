@@ -78,71 +78,58 @@ class Pay
     }
 
     /**
-     * String to encrypt and decrypt without external IV or key.
-     * Creates URL-safe strings for payment links.
+     * Encrypt or decrypt a string using a simple XOR cipher.
+     * The result is a URL-safe string consisting only of 0-9 and a-z.
      *
      * @param string $action 'encrypt' or 'decrypt'
      * @param string $string String to process
      *
      * @return string Processed string
+     * @throws \Exception if invalid action or format is provided.
      */
     private function encrypt_decrypt($action, $string) {
-        // Use a fixed salt - ensure it's not empty
-        $salt = !empty($this->salt) ? $this->salt : 'PayuDefaultSalt2023';
+        // Use the instance salt as the key for encryption/decryption.
+        $salt       = $this->salt;
+        $key        = $salt; // Using salt as key. For improved security, consider a stronger key derivation.
+        $key_length = strlen($key);
 
-        if ($action == 'encrypt') {
-            if (empty($string)) {
-                return '';
+        if ($action === 'encrypt') {
+            $result = '';
+            // Loop through each character of the input string.
+            for ($i = 0, $len = strlen($string); $i < $len; $i++) {
+                $char     = $string[$i];
+                // Cycle through key characters.
+                $key_char = $key[$i % $key_length];
+                // XOR the ASCII values.
+                $xor_value = ord($char) ^ ord($key_char);
+                // Convert the XOR result to base36 and pad to 2 characters.
+                $base36 = base_convert($xor_value, 10, 36);
+                $base36 = str_pad($base36, 2, '0', STR_PAD_LEFT);
+                $result .= $base36;
             }
-            
-            // Step 1: Add the salt to the string
-            $salted = $string . '|' . $salt;
-
-            // Step 2: Base64 encode
-            $encoded = base64_encode($salted);
-
-            // Step 3: Replace URL-unsafe characters
-            $encoded = str_replace(['+', '/', '='], ['p', 's', 'e'], $encoded);
-
-            // Step 4: Reverse the string for additional obfuscation
-            $result = strrev($encoded);
-            
             return $result;
-        } elseif ($action == 'decrypt') {
-            if (empty($string)) {
-                return '';
+        } elseif ($action === 'decrypt') {
+            // The encrypted string should have even length (each byte represented by 2 characters).
+            if (strlen($string) % 2 !== 0) {
+                throw new \Exception('Invalid encrypted string length.');
             }
-            
-            // Step 1: Reverse the string back
-            $reversed = strrev($string);
-
-            // Step 2: Replace the special characters back
-            $base64 = str_replace(['p', 's', 'e'], ['+', '/', '='], $reversed);
-
-            // Step 3: Base64 decode
-            $decoded = base64_decode($base64);
-            if ($decoded === false) {
-                error_log('Failed to base64 decode the string');
-                return '';
+            $result = '';
+            $chunks = str_split($string, 2);
+            $i      = 0;
+            // Process each chunk.
+            foreach ($chunks as $chunk) {
+                // Convert the base36 chunk back to an integer.
+                $xor_value = intval(base_convert($chunk, 36, 10));
+                $key_char  = $key[$i % $key_length];
+                // XOR to get the original character.
+                $original_char = chr($xor_value ^ ord($key_char));
+                $result       .= $original_char;
+                $i++;
             }
-
-            // Step 4: Remove the salt
-            $parts = explode('|', $decoded);
-            if (count($parts) >= 2) {
-                $last = array_pop($parts);
-                if ($last === $salt) {
-                    return implode('|', $parts);
-                } else {
-                    error_log('Salt verification failed');
-                }
-            } else {
-                error_log('Invalid format: no separator found');
-            }
-            
-            return '';
+            return $result;
+        } else {
+            throw new \Exception('Invalid action provided. Use "encrypt" or "decrypt".');
         }
-        
-        return '';
     }
 
     /**
