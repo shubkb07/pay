@@ -29,9 +29,9 @@ if (count($path) > 0) {
             echo '<pre>';
             print_r(create_tables());
             echo '</pre>';
-        } elseif ($path[0] === 'o') {
+        } elseif ($path[0] === 'p') {
             echo '<pre>';
-            print_r(get_option('payu_mid'));
+            print_r($pay->create_transaction_id(''));
             echo '</pre>';
         } else {
             include_once ASSETS . 'pages/404.php';

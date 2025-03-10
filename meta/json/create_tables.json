@@ -36,5 +36,32 @@
         "collate": "utf8mb4_unicode_ci",
         "comment": "System options and settings",
         "ifNotExists": true
+    },
+    "transactions": {
+        "columns": {
+            "id": {
+                "type": "bigint",
+                "unsigned": true,
+                "nullable": false,
+                "autoIncrement": true,
+                "primary": true
+            },
+            "txnid": {
+                "type": "varchar",
+                "length": 255,
+                "nullable": false
+            }
+        },
+        "indexes": {
+            "txnid": {
+                "type": "unique",
+                "columns": "txnid"
+            }
+        },
+        "engine": "InnoDB",
+        "charset": "utf8mb4",
+        "collate": "utf8mb4_unicode_ci",
+        "comment": "Payment transactions",
+        "ifNotExists": true
     }
 }
