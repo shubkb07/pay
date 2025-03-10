@@ -7,4 +7,4 @@
 use Pay\{Db, Pay};
 
 $db = new Db();
-$pay = new Pay();
+// $pay = new Pay();
