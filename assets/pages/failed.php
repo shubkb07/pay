@@ -85,6 +85,18 @@
         </div>
     </main>
     
+	<script type="text/javascript">
+    //<![CDATA[
+    var data = {
+        "transaction": {
+            "Transaction ID": "PAY1234567890",
+            "Date": "Jan 01, 2022 12:00",
+            "Amount": "₹ 100.00",
+            "Status": "Failed",
+        },
+    };
+    //]]>
+    </script>
     <?php include_once ASSETS . 'components/status_footer.php'; ?>
     
     <script type="module" src="<?php echo ASSETS_URL . 'js/status.js'; ?>"></script>
