@@ -43,8 +43,10 @@ function get_option($option_name) {
 
     // If present in global variable, return it, else fetch from database.
     if (isset($option[$option_name])) {
+        echo 'From Global';
         return $option[$option_name];
     } else {
+        echo 'From Database';
         $option_value = $db->select_data(
             'options',
             ['option_value'],
