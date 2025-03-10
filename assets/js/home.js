@@ -10,45 +10,47 @@ const homePage = {
     },
     
     initSectionAnimations() {
-        // Add intersection observer to handle scroll animations
-        const sections = document.querySelectorAll('.animate-on-scroll');
+        // Handle sections with appear-once class
+        const animatedElements = document.querySelectorAll('.appear-once');
         
-        if (sections.length && 'IntersectionObserver' in window) {
+        if (animatedElements.length && 'IntersectionObserver' in window) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Add animation to the section itself
-                        entry.target.classList.add('animate-fade-in-up');
+                        // Apply different animations based on section
+                        const section = entry.target.closest('section');
+                        let animationClass = 'animate-fade-in';
                         
-                        // Find child elements to animate with staggered delays
-                        const animatedChildren = entry.target.querySelectorAll('.grid > div, .flex > div, h2, h3, p, .grid > a');
-                        
-                        if (animatedChildren.length) {
-                            Array.from(animatedChildren).forEach((el, index) => {
-                                setTimeout(() => {
-                                    el.classList.add('animate-fade-in-up');
-                                }, index * 100); // Stagger by 100ms
-                            });
+                        // Choose animation based on section content or position
+                        if (section) {
+                            const sectionIndex = Array.from(document.querySelectorAll('section')).indexOf(section);
+                            
+                            switch (sectionIndex % 5) {
+                                case 1: animationClass = 'animate-fade-up'; break;
+                                case 2: animationClass = 'animate-fade-left'; break;
+                                case 3: animationClass = 'animate-fade-right'; break;
+                                case 4: animationClass = 'animate-scale-in'; break;
+                                default: animationClass = 'animate-fade-in';
+                            }
                         }
                         
-                        // Stop observing after animation
+                        // Apply animation with slight delay to ensure no flickering
+                        setTimeout(() => {
+                            entry.target.classList.add(animationClass);
+                        }, 50);
+                        
+                        // Stop observing after animation applied
                         observer.unobserve(entry.target);
                     }
                 });
             }, { 
-                threshold: 0.1,  // Trigger when 10% of element is visible
-                rootMargin: '0px 0px -10% 0px' // Trigger slightly before element enters viewport
+                threshold: 0.15,
+                rootMargin: '0px 0px -5% 0px'
             });
             
-            sections.forEach(section => {
-                // Make children initially invisible
-                const animatedChildren = section.querySelectorAll('.grid > div, .flex > div, h2, h3, p, .grid > a');
-                Array.from(animatedChildren).forEach(el => {
-                    el.style.opacity = '0';
-                });
-                
-                // Observe the section
-                observer.observe(section);
+            // Start observing all animated elements
+            animatedElements.forEach(element => {
+                observer.observe(element);
             });
         }
     },
@@ -64,6 +66,12 @@ const homePage = {
                 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
+                    // Close mobile menu if open
+                    if (app.dom.mobileMenu && !app.dom.mobileMenu.classList.contains('hidden')) {
+                        app.mobileMenu.close();
+                    }
+                    
+                    // Smooth scroll with offset for header
                     window.scrollTo({
                         top: targetElement.offsetTop - 80, // Offset for header
                         behavior: 'smooth'

@@ -1,4 +1,4 @@
-<header class="bg-white dark:bg-gray-900 shadow-md transition duration-300">
+<header class="bg-white dark:bg-gray-900 shadow-md transition duration-300 relative z-50">
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
             <!-- Logo -->
@@ -22,10 +22,15 @@
                 <i class="fas fa-bars"></i>
             </button>
         </div>
-
-        <!-- Mobile Navigation -->
-        <div id="pay-mobile-menu" class="md:hidden hidden pt-4 pb-2">
-            <div class="flex flex-col space-y-2">
+    </div>
+    
+    <!-- Mobile Navigation Overlay -->
+    <div id="pay-mobile-menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+    
+    <!-- Mobile Navigation -->
+    <div id="pay-mobile-menu" class="md:hidden hidden fixed top-16 right-0 left-0 bg-white dark:bg-gray-900 shadow-lg z-50 border-t border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col space-y-3">
                 <a href="/" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Home</a>
                 <a href="/features" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Features</a>
                 <a href="/pricing" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Pricing</a>
