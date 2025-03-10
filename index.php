@@ -14,7 +14,7 @@
  */
 
 ! defined('ABSPATH') && exit;
-define('INC', ABSPATH . 'inc/');
+define('INC', ABSPATH . 'includes/');
 
 // Load Functions.
 $functions = scandir(INC . 'functions');
