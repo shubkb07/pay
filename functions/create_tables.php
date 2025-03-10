@@ -19,9 +19,6 @@ function create_tables() {
 
     $result = [];
 
-    echo 'reach here';
-    die();
-
     foreach ($create_table_array as $table_name => $table_options) {
         try {
             $table_result = $db->create_new_table($table_name, $table_options);
