@@ -55,15 +55,15 @@
                     Sorry, your payment could not be processed. Please try again or contact support.
                 </p>
                 
-                <div id="pay-error-details" class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6 text-left">
+                <div id="pay-error-details" class="max-w-sm mx-auto bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-4 mb-6 text-left">
                     <?php if(isset($errorMessage) && !empty($errorMessage)): ?>
-                    <p class="text-red-700 dark:text-red-400 mb-2">
+                    <p class="text-red-700 dark:text-red-300 mb-2">
                         <span class="font-medium">Error:</span> <?php echo htmlspecialchars($errorMessage); ?>
                     </p>
                     <?php endif; ?>
                     
                     <?php if(isset($errorCode) && !empty($errorCode)): ?>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">
                         Code: <?php echo htmlspecialchars($errorCode); ?>
                     </p>
                     <?php endif; ?>
@@ -80,16 +80,6 @@
                             Return to Website
                         </a>
                     </div>
-                </div>
-                
-                <div class="mt-6 flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-                    <a href="/contact" class="inline-block bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 px-6 rounded transition duration-300">
-                        <i class="fas fa-headset mr-1"></i> Contact Support
-                    </a>
-                    
-                    <a href="/" class="inline-block text-blue-600 dark:text-blue-400 hover:underline py-2 px-6">
-                        <i class="fas fa-arrow-left mr-1"></i> Back to Home
-                    </a>
                 </div>
             </div>
         </div>

@@ -54,15 +54,15 @@
                     Thank you for your payment. Your transaction has been completed successfully.
                 </p>
                 
-                <div id="pay-transaction-details" class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6 text-left">
+                <div id="pay-transaction-details" class="max-w-sm mx-auto bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-6 text-left">
                     <p class="flex justify-between mb-2">
-                        <span class="text-gray-600 dark:text-gray-400">Transaction ID:</span>
+                        <span class="text-gray-600 dark:text-gray-300">Transaction ID:</span>
                         <span id="pay-transaction-id" class="font-medium text-gray-900 dark:text-gray-100">
                             <?php echo isset($transactionId) ? htmlspecialchars($transactionId) : 'N/A'; ?>
                         </span>
                     </p>
                     <p class="flex justify-between mb-2">
-                        <span class="text-gray-600 dark:text-gray-400">Date:</span>
+                        <span class="text-gray-600 dark:text-gray-300">Date:</span>
                         <span id="pay-transaction-date" class="font-medium text-gray-900 dark:text-gray-100">
                             <?php echo date('M d, Y H:i'); ?>
                         </span>
@@ -82,11 +82,7 @@
                     </div>
                 </div>
                 
-                <div class="mt-6">
-                    <a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">
-                        <i class="fas fa-arrow-left mr-1"></i> Back to Home
-                    </a>
-                </div>
+                <!-- Removed "Back to Home" link -->
             </div>
         </div>
     </main>

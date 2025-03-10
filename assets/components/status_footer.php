@@ -1,4 +1,4 @@
-<footer class="bg-gray-100 dark:bg-gray-900 py-6 transition duration-300">
+<footer class="bg-gray-100 dark:bg-gray-900 py-8 mt-auto transition duration-300">
     <div class="container mx-auto px-8 md:px-12">
         <div class="flex flex-col md:flex-row justify-between items-center">
             <!-- Copyright -->
