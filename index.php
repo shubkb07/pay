@@ -61,3 +61,4 @@ foreach ($functions as $function) {
         include_once INC . 'functions/' . $function;
     }
 }
+
