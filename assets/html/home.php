@@ -1,3 +1,11 @@
+<?php
+
+/**
+ * Home Page.
+ */
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
