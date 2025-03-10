@@ -53,6 +53,7 @@ spl_autoload_register(
 $functions = array(
               'escape.php',
               'prepare.php',
+              'path.php',
              );
 
 // Loop through the functions directory and include all files.
