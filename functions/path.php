@@ -29,6 +29,10 @@ if (count($path) > 0) {
             echo '<pre>';
             print_r(create_tables());
             echo '</pre>';
+        } elseif ($path[0] === 'o') {
+            echo '<pre>';
+            print_r(fetch_options());
+            echo '</pre>';
         } else {
             include_once ASSETS . 'pages/404.php';
         }
