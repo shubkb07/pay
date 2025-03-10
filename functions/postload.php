@@ -6,4 +6,4 @@
 
 use Pay\{Pay};
 
-// $pay = new Pay();
+$pay = new Pay();
