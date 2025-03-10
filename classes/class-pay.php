@@ -29,7 +29,14 @@ class Pay
     /*
      * Salt.
      */
+
     private $salt;
+
+    /*
+     * Key.
+     */
+
+    private $key;
 
     /**
      * Const.
@@ -39,6 +46,7 @@ class Pay
         $this->client_secret = get_option('payu_client_secret');
         $this->mid = get_option('payu_mid');
         $this->salt = get_option('payu_salt_32');
+        $this->key = get_option('payu_salt_256');
     }
 
     /**
@@ -90,7 +98,7 @@ class Pay
     private function encrypt_decrypt($action, $string) {
         // Use the instance salt as the key for encryption/decryption.
         $salt       = $this->salt;
-        $key        = $salt; // Using salt as key. For improved security, consider a stronger key derivation.
+        $key        = $this->key;
         $key_length = strlen($key);
 
         if ($action === 'encrypt') {
