@@ -16,14 +16,20 @@
     <link rel="stylesheet" href="<?php echo ASSETS_URL . 'css/tailwind.css'; ?>">
     <link rel="stylesheet" href="<?php echo ASSETS_URL . 'css/fontawesome.css'; ?>">
     <style>
-        /* Simplified animation system */
+        /* Simpler, more reliable animation system */
         .appear-once {
             opacity: 0;
-            transition: opacity 0.8s ease-out;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         
         .animate-fade-in {
-            opacity: 1;
+            opacity: 1 !important; /* Use !important to ensure it overrides */
+            transform: translateY(0) !important;
+        }
+        
+        /* Default transform that will be reset when visible */
+        .appear-once {
+            transform: translateY(20px);
         }
         
         /* Hero section animations */
@@ -58,6 +64,12 @@
         /* For scroll offsets with sticky header */
         section[id] {
             scroll-margin-top: 5rem;
+        }
+        
+        /* Add a debug helper class that can be added to troubleshoot */
+        .debug-show {
+            opacity: 1 !important;
+            border: 2px solid red !important;
         }
     </style>
 </head>
