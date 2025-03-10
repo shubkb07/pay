@@ -12,6 +12,6 @@ class Pay {
 	 * Const.
 	 */
 	public function __construct() {
-		// 
+		
 	}
 }

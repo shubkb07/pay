@@ -4,13 +4,14 @@
  * Options Functions.
  */
 
+// Initialize the global options array
 global $option;
+$option = [];
 
 /**
  * Fetch Options.
  */
-
-(function fetch_options() {
+function fetch_options() {
     global $db, $option;
 
     // Get options with autoload='yes'.
@@ -29,21 +30,21 @@ global $option;
             $option[$single_option['option_name']] = $single_option['option_value'];
         }
     }
-})();
+}
+
+// Call the function to load options at initialization/
+fetch_options();
 
 /**
  * Get Option.
  */
-
 function get_option($option_name) {
-    global $db;
+    global $db, $option;
 
     // If present in global variable, return it, else fetch from database.
     if (isset($option[$option_name])) {
-        echo 'exists';
         return $option[$option_name];
     } else {
-        echo 'not exists';
         $option_value = $db->select_data(
             'options',
             ['option_value'],
@@ -54,4 +55,6 @@ function get_option($option_name) {
             return $option_value[0]['option_value'];
         }
     }
+
+    return null;
 }
