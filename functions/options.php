@@ -43,10 +43,8 @@ function get_option($option_name) {
 
     // If present in global variable, return it, else fetch from database.
     if (isset($option[$option_name])) {
-        echo 'From Global';
         return $option[$option_name];
     } else {
-        echo 'From Database';
         $option_value = $db->select_data(
             'options',
             ['option_value'],
@@ -59,4 +57,67 @@ function get_option($option_name) {
     }
 
     return null;
+}
+
+/**
+ * Update Option.
+ */
+
+function update_option($option_name, $option_value, $autoload = 'yes') {
+    global $db, $option;
+
+    // Check in global variable, if exist and same, return true.
+    // Else If exist find using get_option, then update and return true.
+    // Else insert new option and return true.
+    if (isset($option[$option_name]) && $option[$option_name] === $option_value) {
+        return true;
+    } elseif (get_option($option_name) !== null) {
+        $result = $db->update_data(
+            'options',
+            ['option_value' => $option_value],
+            ['option_name' => $option_name]
+        );
+
+        if ($result) {
+            $option[$option_name] = $option_value;
+            return true;
+        }
+    } else {
+        $result = $db->insert_data(
+            'options',
+            [
+             'option_name'  => $option_name,
+             'option_value' => $option_value,
+             'autoload'     => $autoload,
+            ]
+        );
+
+        if ($result) {
+            $option[$option_name] = $option_value;
+            return true;
+        }
+    }
+}
+
+/**
+ * Delete Option.
+ */
+
+function delete_option($option_name) {
+    global $db, $option;
+
+    // Check if exist using get_option, then delete in db and global and return true.
+    if (get_option($option_name) !== null) {
+        $result = $db->delete_data(
+            'options',
+            ['option_name' => $option_name]
+        );
+
+        if ($result) {
+            unset($option[$option_name]);
+            return true;
+        }
+    }
+
+    return false;
 }
