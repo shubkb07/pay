@@ -11,6 +11,8 @@ $path = explode('/', $_GET['path'] ?? '');
  */
 
 if (count($path) > 0) {
+    header('Content-Type: text/html; charset=utf-8');
+    flush();
     if ($path[0] === 'home' || $path[0] === '') {
         include_once ASSETS . 'html/home.php';
     } elseif ($path[0] === 'about') {
