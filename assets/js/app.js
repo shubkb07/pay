@@ -21,7 +21,7 @@ const app = {
 		return elements;
 	})(),
 	
-	// Dark mode functionality
+	// Dark mode functionality (system-based only)
 	darkMode: {
 		init() {
 			// Check system preference
@@ -29,15 +29,7 @@ const app = {
 				document.documentElement.classList.add('dark');
 			}
 			
-			// Setup event listeners for theme toggles
-			if (app.dom.themeToggle) {
-				app.dom.themeToggle.addEventListener('click', app.darkMode.toggle);
-			}
-			if (app.dom.mobileThemeToggle) {
-				app.dom.mobileThemeToggle.addEventListener('click', app.darkMode.toggle);
-			}
-			
-			// Listen for system changes
+				// Listen for system changes
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
 				if (e.matches) {
 					document.documentElement.classList.add('dark');
@@ -45,9 +37,6 @@ const app = {
 					document.documentElement.classList.remove('dark');
 				}
 			});
-		},
-		toggle() {
-			document.documentElement.classList.toggle('dark');
 		}
 	},
 	

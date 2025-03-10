@@ -32,9 +32,9 @@
                 </ul>
             </div>
             
-            <!-- Trusted Websites -->
+            <!-- Powered Websites -->
             <div class="col-span-1">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Trusted Websites</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Websites Using Pay</h3>
                 <ul class="space-y-2">
                     <li><a href="https://shubkb.com" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">shubkb.com</a></li>
                     <li><a href="https://shubkb.me" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">shubkb.me</a></li>
