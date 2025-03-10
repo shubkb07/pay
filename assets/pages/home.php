@@ -16,55 +16,48 @@
     <link rel="stylesheet" href="<?php echo ASSETS_URL . 'css/tailwind.css'; ?>">
     <link rel="stylesheet" href="<?php echo ASSETS_URL . 'css/fontawesome.css'; ?>">
     <style>
-        /* We'll define animation classes since Tailwind doesn't have these by default */
-        /* You could also extend Tailwind config instead */
+        /* Simplified animation system */
         .appear-once {
             opacity: 0;
+            transition: opacity 0.8s ease-out;
         }
         
-        /* Different animations for variety */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeInRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        
-        .animate-fade-in { animation: fadeIn 0.7s ease forwards; }
-        .animate-fade-up { animation: fadeInUp 0.7s ease forwards; }
-        .animate-fade-down { animation: fadeInDown 0.7s ease forwards; }
-        .animate-fade-left { animation: fadeInLeft 0.7s ease forwards; }
-        .animate-fade-right { animation: fadeInRight 0.7s ease forwards; }
-        .animate-scale-in { animation: scaleIn 0.7s ease forwards; }
-        
-        /* Animation delays */
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
-        
-        /* Add this to ensure proper spacing with sticky header */
-        .sticky-header-offset {
-            scroll-margin-top: 5rem;
+        .animate-fade-in {
+            opacity: 1;
         }
-
-        /* Card hover animations */
-        .card:hover .card-icon {
+        
+        /* Hero section animations */
+        #pay-hero-title, #pay-hero-subtitle, #pay-hero-buttons {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        #pay-hero-title.opacity-100,
+        #pay-hero-subtitle.opacity-100,
+        #pay-hero-buttons.opacity-100 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Card hover effects */
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .feature-card:hover .feature-icon {
+            color: #3b82f6;
             transform: scale(1.1) rotate(10deg);
         }
         
-        /* Add group hover functionality */
-        .group:hover .group-hover\:rotate-12 {
-            transform: rotate(12deg);
-        }
-        
-        .group:hover .group-hover\:text-blue-700 {
-            color: #1d4ed8;
-        }
-        
-        .dark .group:hover .dark\:group-hover\:text-blue-300 {
-            color: #93c5fd;
+        /* For scroll offsets with sticky header */
+        section[id] {
+            scroll-margin-top: 5rem;
         }
     </style>
 </head>
@@ -75,13 +68,13 @@
     <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-24">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 id="pay-hero-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-down">
+                <h1 id="pay-hero-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                     Simplified Payment Solutions
                 </h1>
-                <p id="pay-hero-subtitle" class="text-xl md:text-2xl mb-8 text-blue-100 animate-fade-up delay-200">
+                <p id="pay-hero-subtitle" class="text-xl md:text-2xl mb-8 text-blue-100">
                     Easy payment tracking, secure payment links, and seamless integration with PayU
                 </p>
-                <div id="pay-hero-buttons" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in delay-400">
+                <div id="pay-hero-buttons" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                     <a href="#how-it-works" class="bg-white text-blue-700 hover:bg-blue-50 hover:scale-105 px-8 py-3 rounded-lg font-semibold shadow-lg transition duration-300 transform">
                         How It Works
                     </a>
@@ -113,7 +106,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 sticky-header-offset" id="how-it-works">
+    <section class="py-20" id="how-it-works">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 appear-once">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
@@ -123,31 +116,31 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-300 transform appear-once card">
-                    <div class="text-blue-600 dark:text-blue-400 mb-4 group">
-                        <i class="fas fa-link fa-3x group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition duration-300 transform"></i>
+                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once">
+                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300">
+                        <i class="fas fa-link fa-3x"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300">Payment Links</h3>
+                    <h3 class="text-xl font-bold mb-3">Payment Links</h3>
                     <p class="text-gray-600 dark:text-gray-400">
                         Create customized payment links to share with your customers via email, SMS, or social media.
                     </p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-300 transform appear-once card">
-                    <div class="text-blue-600 dark:text-blue-400 mb-4 group">
-                        <i class="fas fa-credit-card fa-3x group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition duration-300 transform"></i>
+                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once">
+                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300">
+                        <i class="fas fa-credit-card fa-3x"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300">Payment Records</h3>
+                    <h3 class="text-xl font-bold mb-3">Payment Records</h3>
                     <p class="text-gray-600 dark:text-gray-400">
                         Keep track of all your transactions in one place with detailed payment records and analytics.
                     </p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-300 transform appear-once card">
-                    <div class="text-blue-600 dark:text-blue-400 mb-4 group">
-                        <i class="fas fa-tags fa-3x group-hover:rotate-12 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition duration-300 transform"></i>
+                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once">
+                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300">
+                        <i class="fas fa-tags fa-3x"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300">Promo Codes</h3>
+                    <h3 class="text-xl font-bold mb-3">Promo Codes</h3>
                     <p class="text-gray-600 dark:text-gray-400">
                         Create and manage discount codes, offers, and coupons to boost your sales and customer loyalty.
                     </p>

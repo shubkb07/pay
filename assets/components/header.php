@@ -1,4 +1,4 @@
-<header class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-md transition duration-300 z-50">
+<header class="sticky top-0 w-full bg-white dark:bg-gray-900 shadow-md transition duration-300 z-50">
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
             <!-- Logo -->
@@ -22,32 +22,32 @@
                 <i class="fas fa-bars"></i>
             </button>
         </div>
+
+        <!-- Mobile Navigation -->
+        <div id="pay-mobile-menu" class="hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 z-20">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="/" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Home</a>
+                    <a href="/features" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Features</a>
+                    <a href="/pricing" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Pricing</a>
+                    <a href="/about" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">About</a>
+                    <a href="/contact" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Contact</a>
+                </div>
+            </div>
+        </div>
     </div>
 </header>
 
-<!-- Mobile Navigation Overlay - with backdrop blur effect -->
-<div id="pay-mobile-menu-overlay" class="hidden fixed inset-0 backdrop-filter backdrop-blur-sm bg-black bg-opacity-30 z-40"></div>
+<!-- Mobile Navigation Overlay -->
+<div id="pay-mobile-menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-10"></div>
 
-<!-- Mobile Navigation - positioned below header in DOM but visually on top with z-index -->
-<div id="pay-mobile-menu" class="hidden fixed top-16 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg z-50 border-t border-gray-200 dark:border-gray-700">
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex flex-col space-y-3">
-            <a href="/" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Home</a>
-            <a href="/features" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Features</a>
-            <a href="/pricing" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Pricing</a>
-            <a href="/about" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">About</a>
-            <a href="/contact" class="py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">Contact</a>
-        </div>
-    </div>
-</div>
-
-<!-- Add body padding to account for fixed header -->
+<!-- Remove body padding and add scroll margin for section targets -->
 <style>
-    body {
-        padding-top: 4rem; /* Adjust based on your header height */
+    html {
+        scroll-padding-top: 5rem;
     }
     
-    /* Support for backdrop-filter in browsers that support it */
+    /* Ensure backdrop blur works across browsers */
     @supports (backdrop-filter: blur(4px)) {
         #pay-mobile-menu-overlay {
             backdrop-filter: blur(4px);
