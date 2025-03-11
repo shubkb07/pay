@@ -57,10 +57,10 @@ if (count($path) > 0) {
         } else {
             include_once ASSETS . 'pages/404.php';
         }
-    } elseif (count($path) === 0) {
-        include_once ASSETS . 'pages/home.php';
     } else {
         include_once ASSETS . 'pages/404.php';
     }
+} elseif (count($path) === 0) {
+    include_once ASSETS . 'pages/home.php';
 }
 die();
