@@ -7,7 +7,7 @@
 $path = explode('/', $_GET['path'] ?? '');
 
 // If last element is empty, remove it.
-if (end($path) === '' && count($path) > 1) {
+if (end($path) === '') {
     array_pop($path);
 }
 
@@ -35,6 +35,8 @@ if (count($path) > 0) {
             } else {
                 include_once ASSETS . 'pages/404.php';
             }
+        } else {
+            include_once ASSETS . 'pages/404.php';
         }
     } elseif (count($path) === 1) {
         header('Content-Type: text/html; charset=utf-8');
@@ -55,6 +57,10 @@ if (count($path) > 0) {
         } else {
             include_once ASSETS . 'pages/404.php';
         }
+    } elseif (count($path) === 0) {
+        include_once ASSETS . 'pages/home.php';
+    } else {
+        include_once ASSETS . 'pages/404.php';
     }
 }
 die();
