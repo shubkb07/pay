@@ -6,6 +6,11 @@
 
 $path = explode('/', $_GET['path'] ?? '');
 
+// If last element is empty, remove it.
+if (end($path) === '') {
+    array_pop($path);
+}
+
 /*
  * Single Path.
  */
