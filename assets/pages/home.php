@@ -71,22 +71,41 @@
             opacity: 1 !important;
             border: 2px solid red !important;
         }
+
+        /* Accessibility styles */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* Focus styles for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300">
     <?php include_once ASSETS . 'components/header.php'; ?>
     
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-24">
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-24" aria-labelledby="hero-heading">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 id="pay-hero-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                <h1 id="hero-heading" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                     Simplified Payment Solutions
                 </h1>
                 <p id="pay-hero-subtitle" class="text-xl md:text-2xl mb-8 text-blue-100">
                     Easy payment tracking, secure payment links, and seamless integration with PayU
                 </p>
-                <div id="pay-hero-buttons" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <div id="pay-hero-buttons" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4" role="group" aria-label="Hero navigation">
                     <a href="#how-it-works" class="bg-white text-blue-700 hover:bg-blue-50 hover:scale-105 px-8 py-3 rounded-lg font-semibold shadow-lg transition duration-300 transform">
                         How It Works
                     </a>
@@ -102,7 +121,7 @@
                 <div class="flex flex-col md:flex-row items-center p-8">
                     <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
                         <div class="text-center md:text-left">
-                            <i class="fas fa-exchange-alt text-blue-500 dark:text-blue-400 text-9xl mb-6 transform hover:scale-110 transition duration-300"></i>
+                            <i class="fas fa-exchange-alt text-blue-500 dark:text-blue-400 text-9xl mb-6 transform hover:scale-110 transition duration-300" role="img" aria-hidden="true"></i>
                         </div>
                     </div>
                     <div class="md:w-1/2 md:pl-8 text-center md:text-left">
@@ -118,18 +137,18 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20" id="how-it-works">
+    <section class="py-20" id="how-it-works" aria-labelledby="features-heading">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 appear-once">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
+                <h2 id="features-heading" class="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                     Everything you need to manage payments efficiently
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once">
-                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" role="list">
+                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once" tabindex="0" role="listitem">
+                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300" aria-hidden="true">
                         <i class="fas fa-link fa-3x"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Payment Links</h3>
@@ -138,8 +157,8 @@
                     </p>
                 </div>
                 
-                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once">
-                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300">
+                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once" tabindex="0" role="listitem">
+                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300" aria-hidden="true">
                         <i class="fas fa-credit-card fa-3x"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Payment Records</h3>
@@ -148,8 +167,8 @@
                     </p>
                 </div>
                 
-                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once">
-                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300">
+                <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-gray-700 appear-once" tabindex="0" role="listitem">
+                    <div class="feature-icon text-blue-600 dark:text-blue-400 mb-4 transition-all duration-300" aria-hidden="true">
                         <i class="fas fa-tags fa-3x"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">Promo Codes</h3>
@@ -162,22 +181,22 @@
     </section>
 
     <!-- Integration Section -->
-    <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <section class="py-16 bg-gray-50 dark:bg-gray-900" aria-labelledby="integration-heading">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto appear-once">
                 <div class="flex flex-col md:flex-row items-center">
-                    <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
+                    <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center" aria-hidden="true">
                         <i class="fas fa-shield-alt text-blue-500 dark:text-blue-400 text-9xl hover:scale-110 transition duration-300 transform"></i>
                     </div>
                     <div class="md:w-1/2 md:pl-12">
-                        <h2 class="text-3xl font-bold mb-4">Secure Integration</h2>
+                        <h2 id="integration-heading" class="text-3xl font-bold mb-4">Secure Integration</h2>
                         <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
                             Pay connects your website to PayU payment gateway, handling payment records, payment cards, promo codes, and discount management. Only payment invoices and necessary details are stored on our system, while sensitive payment data remains secure with PayU.
                         </p>
                         
-                        <div class="bg-blue-50 dark:bg-gray-800 p-4 rounded-md border-l-4 border-blue-500 dark:border-blue-400 hover:shadow-md transition duration-300">
+                        <div class="bg-blue-50 dark:bg-gray-800 p-4 rounded-md border-l-4 border-blue-500 dark:border-blue-400 hover:shadow-md transition duration-300" role="note">
                             <p class="text-gray-700 dark:text-gray-300">
-                                <i class="fas fa-info-circle mr-2 text-blue-500 dark:text-blue-400"></i>
+                                <i class="fas fa-info-circle mr-2 text-blue-500 dark:text-blue-400" aria-hidden="true"></i>
                                 No payment method details are stored on this site other than payment invoices and basic information required for record keeping.
                             </p>
                         </div>
@@ -188,32 +207,32 @@
     </section>
 
     <!-- Websites Using Pay Section -->
-    <section class="py-16">
+    <section class="py-16" aria-labelledby="websites-heading">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12 appear-once">
-                <h2 class="text-3xl font-bold mb-4">Websites Using Pay</h2>
+                <h2 id="websites-heading" class="text-3xl font-bold mb-4">Websites Using Pay</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                     These websites and applications already use Pay for their payment processing
                 </p>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 max-w-4xl mx-auto">
-                <a href="https://shubkb.com" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 max-w-4xl mx-auto" role="list" aria-label="Websites using Pay">
+                <a href="https://shubkb.com" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once" role="listitem">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">shubkb.com</div>
                 </a>
-                <a href="https://shubkb.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
+                <a href="https://shubkb.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once" role="listitem">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">shubkb.me</div>
                 </a>
-                <a href="https://shubkb.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
+                <a href="https://shubkb.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once" role="listitem">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">shubkb.in</div>
                 </a>
-                <a href="https://sh6.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
+                <a href="https://sh6.me" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once" role="listitem">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">sh6.me</div>
                 </a>
-                <a href="https://sync.org.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
+                <a href="https://sync.org.in" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once" role="listitem">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">sync.org.in</div>
                 </a>
-                <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once">
+                <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener noreferrer" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg hover:-translate-y-1 hover:bg-blue-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500 border-2 border-transparent text-center transition duration-300 transform appear-once" role="listitem">
                     <div class="text-gray-700 dark:text-gray-300 font-medium">WEhizzy</div>
                 </a>
             </div>
@@ -221,19 +240,19 @@
     </section>
 
     <!-- How it Works Section -->
-    <section class="py-16 bg-blue-50 dark:bg-gray-900">
+    <section class="py-16 bg-blue-50 dark:bg-gray-900" aria-labelledby="how-it-works-heading">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 appear-once">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">How Pay Works</h2>
+                <h2 id="how-it-works-heading" class="text-3xl md:text-4xl font-bold mb-4">How Pay Works</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                     A simple process from payment creation to completion
                 </p>
             </div>
             
             <div class="max-w-5xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card">
-                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8" role="list" aria-label="Process steps">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card" tabindex="0" role="listitem">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                             <span class="text-blue-600 dark:text-blue-400 text-2xl font-bold">1</span>
                         </div>
                         <h3 class="text-xl font-semibold mb-3">Create Payment</h3>
@@ -242,8 +261,8 @@
                         </p>
                     </div>
                     
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card">
-                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card" tabindex="0" role="listitem">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                             <span class="text-blue-600 dark:text-blue-400 text-2xl font-bold">2</span>
                         </div>
                         <h3 class="text-xl font-semibold mb-3">Secure Handoff</h3>
@@ -252,8 +271,8 @@
                         </p>
                     </div>
                     
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card">
-                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center hover:shadow-xl hover:scale-105 hover:bg-gradient-to-b hover:from-white hover:to-blue-50 dark:hover:from-gray-800 dark:hover:to-gray-700 transition duration-300 transform appear-once card" tabindex="0" role="listitem">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                             <span class="text-blue-600 dark:text-blue-400 text-2xl font-bold">3</span>
                         </div>
                         <h3 class="text-xl font-semibold mb-3">Payment Complete</h3>
