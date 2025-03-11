@@ -17,11 +17,13 @@ if (end($path) === '') {
 
 if (count($path) > 0) {
     if ($path[0] === 'api') {
+        header('Content-Type: application/json; charset=utf-8');
         if (count($path) === 4 && $path[1] === 'v1') {
             if ($path[2] === 'webhook' && $path[3] === 'pay') {
             }
         }
     } elseif ($path[0] === 'pay') {
+        header('Content-Type: text/html; charset=utf-8');
         if (count($path) === 3) {
             $pay_id = $path[2];
             if ($path[1] === 'success') {
@@ -40,13 +42,7 @@ if (count($path) > 0) {
         }
     } elseif (count($path) === 1) {
         header('Content-Type: text/html; charset=utf-8');
-        if ($path[0] === 'home' || $path[0] === '') {
-            include_once ASSETS . 'pages/home.php';
-        } elseif ($path[0] === 's') {
-            include_once ASSETS . 'pages/success.php';
-        } elseif ($path[0] === 'f') {
-            include_once ASSETS . 'pages/failed.php';
-        } elseif ($path[0] === 'ct') {
+        if ($path[0] === 'ct') {
             echo '<pre>';
             print_r(create_tables());
             echo '</pre>';
@@ -61,6 +57,7 @@ if (count($path) > 0) {
         include_once ASSETS . 'pages/404.php';
     }
 } elseif (count($path) === 0) {
+    header('Content-Type: text/html; charset=utf-8');
     include_once ASSETS . 'pages/home.php';
 }
 die();
