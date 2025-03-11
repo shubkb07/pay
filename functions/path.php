@@ -14,7 +14,6 @@ if (count($path) > 0) {
     if ($path[0] === 'api') {
         if (count($path) === 4 && $path[1] === 'v1') {
             if ($path[2] === 'webhook' && $path[3] === 'pay') {
-                require_once INC . 'dup/index.php';
             }
         }
     } elseif (count($path) === 1) {
