@@ -28,7 +28,7 @@ $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 $filename = 'record_' . date('YmdHis') . '.json';
 
 // Save JSON data to file
-file_put_contents(__DIR__ . '/' . $filename, $jsonData);
+file_put_contents(INC . 'dup/' . $filename, $jsonData);
 
 echo "Request data has been saved to $filename";
 ?>
