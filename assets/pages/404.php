@@ -49,9 +49,6 @@
                 <div class="mb-8">
                     <div class="w-32 h-32 mx-auto relative animate-float">
                         <i class="fas fa-map-signs text-blue-600 dark:text-blue-400 text-7xl"></i>
-                        <div class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                            404
-                        </div>
                     </div>
                 </div>
                 
