@@ -7,7 +7,7 @@
 $path = explode('/', $_GET['path'] ?? '');
 
 // If last element is empty, remove it.
-if (end($path) === '') {
+if (end($path) === '' && count($path) > 1) {
     array_pop($path);
 }
 
