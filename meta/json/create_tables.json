@@ -37,10 +37,244 @@
         "comment": "System options and settings",
         "ifNotExists": true
     },
+    "users": {
+        "columns": {
+            "id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "autoIncrement": true,
+                "primary": true
+            },
+            "email": {
+                "type": "varchar",
+                "length": 255,
+                "nullable": false
+            },
+            "rewards_points": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "transaction_start": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "transaction_success": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "transaction_failed": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "transaction_refund": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "coupon_apply": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "coupon_completed": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "last_transaction": {
+                "type": "datetime",
+                "nullable": true,
+                "default": null
+            },
+            "account_status": {
+                "type": "enum",
+                "length": "'active','blocked'",
+                "default": "active"
+            },
+            "created_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP"
+            },
+            "updated_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+            }
+        },
+        "indexes": {
+            "email": {
+                "type": "unique",
+                "columns": "email"
+            }
+        },
+        "engine": "InnoDB",
+        "charset": "utf8mb4",
+        "ifNotExists": true
+    },
+    "products": {
+        "columns": {
+            "id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "autoIncrement": true,
+                "primary": true
+            },
+            "name": {
+                "type": "varchar",
+                "length": 255,
+                "nullable": false
+            },
+            "description": {
+                "type": "text",
+                "nullable": true
+            },
+            "price": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": false
+            },
+            "currency": {
+                "type": "varchar",
+                "length": 10,
+                "nullable": false,
+                "default": "INR"
+            },
+            "discount": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": 0
+            },
+            "discount_type": {
+                "type": "enum",
+                "length": "'percentage','fixed'",
+                "nullable": true,
+                "default": "percentage"
+            },
+            "value_of_discount": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": 0
+            },
+            "can_percentage_coupon_apply": {
+                "type": "boolean",
+                "nullable": true,
+                "default": true
+            },
+            "can_price_coupon_apply": {
+                "type": "boolean",
+                "nullable": true,
+                "default": true
+            },
+            "can_user_coupon_apply": {
+                "type": "boolean",
+                "nullable": true,
+                "default": true
+            },
+            "restricted_coupons": {
+                "type": "json",
+                "nullable": true,
+                "default": null
+            },
+            "is_one_time_purchase": {
+                "type": "boolean",
+                "nullable": true,
+                "default": false
+            },
+            "purchase_limit_per_user": {
+                "type": "int",
+                "nullable": true,
+                "default": null
+            },
+            "category": {
+                "type": "varchar",
+                "length": 100,
+                "nullable": true,
+                "default": null
+            },
+            "tags": {
+                "type": "json",
+                "nullable": true,
+                "default": null
+            },
+            "created_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP"
+            },
+            "updated_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+            }
+        },
+        "engine": "InnoDB",
+        "charset": "utf8mb4",
+        "ifNotExists": true
+    },
+    "ua": {
+        "columns": {
+            "id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "autoIncrement": true,
+                "primary": true
+            },
+            "ua": {
+                "type": "varchar",
+                "length": 512,
+                "nullable": false
+            }
+        },
+        "engine": "InnoDB",
+        "charset": "utf8mb4",
+        "ifNotExists": true
+    },
+    "ip": {
+        "columns": {
+            "id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "autoIncrement": true,
+                "primary": true
+            },
+            "ip": {
+                "type": "varchar",
+                "length": 45,
+                "nullable": false
+            },
+            "location": {
+                "type": "varchar",
+                "length": 255,
+                "nullable": true,
+                "default": null
+            }
+        },
+        "engine": "InnoDB",
+        "charset": "utf8mb4",
+        "ifNotExists": true
+    },
     "transactions": {
         "columns": {
             "id": {
-                "type": "bigint",
+                "type": "int",
                 "unsigned": true,
                 "nullable": false,
                 "autoIncrement": true,
@@ -48,8 +282,121 @@
             },
             "txnid": {
                 "type": "varchar",
+                "length": 100,
+                "nullable": false
+            },
+            "invoice_number": {
+                "type": "varchar",
+                "length": 100,
+                "nullable": false
+            },
+            "payment_link_id": {
+                "type": "varchar",
+                "length": 100,
+                "nullable": false
+            },
+            "guid": {
+                "type": "varchar",
+                "length": 100,
+                "nullable": false
+            },
+            "total_amount": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": false
+            },
+            "discount_ongoing": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": 0
+            },
+            "discount_from_coupon": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": 0
+            },
+            "coupon_code": {
+                "type": "varchar",
+                "length": 50,
+                "nullable": true,
+                "default": null
+            },
+            "tax": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": 0
+            },
+            "final_price": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": false
+            },
+            "status": {
+                "type": "enum",
+                "length": "'pending','failed','success'",
+                "nullable": false,
+                "default": "pending"
+            },
+            "webhook_status": {
+                "type": "enum",
+                "length": "'yes','no'",
+                "nullable": false,
+                "default": "no"
+            },
+            "is_manual_checked": {
+                "type": "enum",
+                "length": "'yes','no'",
+                "nullable": false,
+                "default": "no"
+            },
+            "name": {
+                "type": "varchar",
                 "length": 255,
                 "nullable": false
+            },
+            "user_id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false
+            },
+            "phone": {
+                "type": "varchar",
+                "length": 20,
+                "nullable": false
+            },
+            "address": {
+                "type": "text",
+                "nullable": true
+            },
+            "ip_created_from_id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false
+            },
+            "ua_created_id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false
+            },
+            "ip_success_id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": true,
+                "default": null
+            },
+            "ua_success_id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": true,
+                "default": null
+            },
+            "created_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP"
             }
         },
         "indexes": {
@@ -58,10 +405,178 @@
                 "columns": "txnid"
             }
         },
+        "foreignKeys": {
+            "fk_transactions_user": {
+                "columns": "user_id",
+                "references": {
+                    "table": "users",
+                    "columns": "id"
+                },
+                "onDelete": "CASCADE"
+            },
+            "fk_transactions_ip_created": {
+                "columns": "ip_created_from_id",
+                "references": {
+                    "table": "ip",
+                    "columns": "id"
+                },
+                "onDelete": "RESTRICT"
+            },
+            "fk_transactions_ua_created": {
+                "columns": "ua_created_id",
+                "references": {
+                    "table": "ua",
+                    "columns": "id"
+                },
+                "onDelete": "RESTRICT"
+            },
+            "fk_transactions_ip_success": {
+                "columns": "ip_success_id",
+                "references": {
+                    "table": "ip",
+                    "columns": "id"
+                },
+                "onDelete": "SET NULL"
+            },
+            "fk_transactions_ua_success": {
+                "columns": "ua_success_id",
+                "references": {
+                    "table": "ua",
+                    "columns": "id"
+                },
+                "onDelete": "SET NULL"
+            }
+        },
         "engine": "InnoDB",
         "charset": "utf8mb4",
-        "collate": "utf8mb4_unicode_ci",
-        "comment": "Payment transactions",
+        "ifNotExists": true
+    },
+    "coupons": {
+        "columns": {
+            "id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "autoIncrement": true,
+                "primary": true
+            },
+            "coupon_code": {
+                "type": "varchar",
+                "length": 50,
+                "nullable": false
+            },
+            "discount_type": {
+                "type": "enum",
+                "length": "'percentage','fixed'",
+                "nullable": false
+            },
+            "discount_value": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": false
+            },
+            "currency": {
+                "type": "varchar",
+                "length": 10,
+                "nullable": true,
+                "default": "INR"
+            },
+            "status": {
+                "type": "enum",
+                "length": "'active','inactive','expired'",
+                "nullable": false,
+                "default": "active"
+            },
+            "user_id": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": true,
+                "default": null
+            },
+            "start_date": {
+                "type": "datetime",
+                "nullable": true,
+                "default": null
+            },
+            "end_date": {
+                "type": "datetime",
+                "nullable": true,
+                "default": null
+            },
+            "usage_limit": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": true,
+                "default": null
+            },
+            "usage_count": {
+                "type": "int",
+                "unsigned": true,
+                "nullable": false,
+                "default": 0
+            },
+            "min_purchase_amount": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": 0
+            },
+            "max_discount_amount": {
+                "type": "decimal",
+                "length": "10,2",
+                "nullable": true,
+                "default": null
+            },
+            "is_first_purchase_only": {
+                "type": "boolean",
+                "nullable": true,
+                "default": false
+            },
+            "is_stackable": {
+                "type": "boolean",
+                "nullable": true,
+                "default": false
+            },
+            "applicable_scope": {
+                "type": "enum",
+                "length": "'all','specific'",
+                "nullable": false,
+                "default": "all"
+            },
+            "applicable_products": {
+                "type": "json",
+                "nullable": true,
+                "default": null
+            },
+            "created_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP"
+            },
+            "updated_at": {
+                "type": "datetime",
+                "nullable": true,
+                "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+            }
+        },
+        "indexes": {
+            "coupon_code": {
+                "type": "unique",
+                "columns": "coupon_code"
+            }
+        },
+        "foreignKeys": {
+            "fk_coupons_user": {
+                "columns": "user_id",
+                "references": {
+                    "table": "users",
+                    "columns": "id"
+                },
+                "onDelete": "CASCADE"
+            }
+        },
+        "engine": "InnoDB",
+        "charset": "utf8mb4",
         "ifNotExists": true
     }
 }
