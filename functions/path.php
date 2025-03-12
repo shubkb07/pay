@@ -49,6 +49,7 @@ if (count($path) > 0) {
         } elseif ($path[0] === 'p') {
             echo '<pre>';
             echo 'reach  ';
+            print_r($pay);
             print_r($pay->create_pay_link());
             echo '</pre>';
         } else {
