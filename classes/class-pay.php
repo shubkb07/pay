@@ -143,7 +143,7 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($options) {
+    public function create_pay_link() {
         $txnid = $this->create_transaction_id();
         echo 'txnid: ' . $txnid . '<br>';
         $encrypted_txnid = $this->encrypt_decrypt('encrypt', $txnid);
