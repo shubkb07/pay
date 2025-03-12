@@ -247,31 +247,6 @@
         "charset": "utf8mb4",
         "ifNotExists": true
     },
-    "ip": {
-        "columns": {
-            "id": {
-                "type": "int",
-                "unsigned": true,
-                "nullable": false,
-                "autoIncrement": true,
-                "primary": true
-            },
-            "ip": {
-                "type": "varchar",
-                "length": 45,
-                "nullable": false
-            },
-            "location": {
-                "type": "varchar",
-                "length": 255,
-                "nullable": true,
-                "default": null
-            }
-        },
-        "engine": "InnoDB",
-        "charset": "utf8mb4",
-        "ifNotExists": true
-    },
     "transactions": {
         "columns": {
             "id": {
@@ -341,11 +316,21 @@
                 "nullable": false,
                 "default": "pending"
             },
+            "data": {
+                "type": "longtext",
+                "nullable": true,
+                "default": null
+            },
             "webhook_status": {
                 "type": "enum",
                 "length": "'yes','no'",
                 "nullable": false,
                 "default": "no"
+            },
+            "webhook_headers": {
+                "type": "longtext",
+                "nullable": true,
+                "default": null
             },
             "is_manual_checked": {
                 "type": "enum",
