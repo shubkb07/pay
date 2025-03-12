@@ -483,10 +483,19 @@ class Db
             $parts[] = 'NOT NULL';
         }
         if (array_key_exists('default', $column)) {
-            if (is_string($column['default']) && strpos($column['default'], '()') !== false) {
+            if ($column['default'] === null) {
+                $parts[] = 'DEFAULT NULL';
+            } elseif ($column['default'] === CURRENT_TIMESTAMP || $column['default'] === 'CURRENT_TIMESTAMP') {
+                // Handle timestamp default without quotes
+                $parts[] = 'DEFAULT CURRENT_TIMESTAMP';
+            } elseif (is_string($column['default']) && (
+                strpos($column['default'], 'CURRENT_TIMESTAMP') !== false ||
+                strpos($column['default'], '()') !== false
+            )) {
+                // Handle function calls like CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP without quotes
                 $parts[] = 'DEFAULT ' . $column['default'];
             } else {
-                $parts[] = 'DEFAULT ' . ($column['default'] === null ? 'NULL' : $this->format_value($column['default']));
+                $parts[] = 'DEFAULT ' . $this->format_value($column['default']);
             }
         }
         if (!empty($column['autoIncrement'])) {

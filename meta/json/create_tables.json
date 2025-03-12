@@ -106,12 +106,12 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": "CURRENT_TIMESTAMP()"
+                "default": CURRENT_TIMESTAMP
             },
             "updated_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": "CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()"
+                "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
             }
         },
         "indexes": {
@@ -216,7 +216,7 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": "CURRENT_TIMESTAMP"
+                "default": CURRENT_TIMESTAMP
             },
             "updated_at": {
                 "type": "datetime",
@@ -535,9 +535,10 @@
                 "default": "no"
             },
             "is_stackable": {
-                "type": "boolean",
+                "type": "varchar",
+                "length": 10,
                 "nullable": true,
-                "default": false
+                "default": "no"
             },
             "applicable_scope": {
                 "type": "enum",
@@ -553,7 +554,7 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": "CURRENT_TIMESTAMP"
+                "default": CURRENT_TIMESTAMP
             },
             "updated_at": {
                 "type": "datetime",
