@@ -106,7 +106,7 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": CURRENT_TIMESTAMP
+                "default": "CURRENT_TIMESTAMP"
             },
             "updated_at": {
                 "type": "datetime",
@@ -216,7 +216,7 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": CURRENT_TIMESTAMP
+                "default": "CURRENT_TIMESTAMP"
             },
             "updated_at": {
                 "type": "datetime",
@@ -554,7 +554,7 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": CURRENT_TIMESTAMP
+                "default": "CURRENT_TIMESTAMP"
             },
             "updated_at": {
                 "type": "datetime",

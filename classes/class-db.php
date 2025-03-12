@@ -485,15 +485,16 @@ class Db
         if (array_key_exists('default', $column)) {
             if ($column['default'] === null) {
                 $parts[] = 'DEFAULT NULL';
-            } elseif ($column['default'] === CURRENT_TIMESTAMP || $column['default'] === 'CURRENT_TIMESTAMP') {
-                // Handle timestamp default without quotes
-                $parts[] = 'DEFAULT CURRENT_TIMESTAMP';
-            } elseif (is_string($column['default']) && (
-                strpos($column['default'], 'CURRENT_TIMESTAMP') !== false ||
-                strpos($column['default'], '()') !== false
-            )) {
-                // Handle function calls like CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP without quotes
-                $parts[] = 'DEFAULT ' . $column['default'];
+            } elseif (is_string($column['default'])) {
+                // Special handling for MySQL functions in strings
+                if ($column['default'] === 'CURRENT_TIMESTAMP' || 
+                    $column['default'] === 'CURRENT_TIMESTAMP()' ||
+                    strpos($column['default'], 'CURRENT_TIMESTAMP ON UPDATE') === 0) {
+                    // Pass MySQL functions without quotes
+                    $parts[] = 'DEFAULT ' . $column['default'];
+                } else {
+                    $parts[] = 'DEFAULT ' . $this->format_value($column['default']);
+                }
             } else {
                 $parts[] = 'DEFAULT ' . $this->format_value($column['default']);
             }
