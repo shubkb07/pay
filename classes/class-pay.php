@@ -183,7 +183,11 @@ class Pay
             $bearer_data = json_decode($this->bearer, true);
 
             // Check if token is still valid.
-            if (!empty($bearer_data['access_token']) && isset($bearer_data['expire_in']) && $bearer_data['expire_in'] > $current_time) {
+            if (
+                !empty($bearer_data['access_token'])
+                && isset($bearer_data['expire_in'])
+                && $bearer_data['expire_in'] > $current_time
+            ) {
                 return $bearer_data['access_token'];
             }
         }
@@ -245,7 +249,7 @@ class Pay
 
         // If token expires in more than 60 seconds, save it.
         if ($expires_in > 60) {
-            $expiration_time = $current_time + $expires_in;
+            $expiration_time = $current_time + $expires_in - 60;
             $bearer_data = array(
                             'access_token' => $access_token,
                             'expire_in'    => $expiration_time,
@@ -264,13 +268,219 @@ class Pay
     }
 
     /**
+     * Get Payment Link from PayU.
+     *
+     * Make request to url,
+     * if mode = test then use test url - https://uatoneapi.payu.in/payment-links,
+     * else use production url - https://oneapi.payu.in/payment-links.
+     * Set Header mid and Authorization Bearer access_token,
+     * and set body raw,
+     * in that body pass json stringified data,
+     * {
+     *   "transactionId": $transaction_id,
+     *   "isAmountFilledByCustomer": false,
+     *   "customer": $user,
+     *   "address": $address,
+     *   "subAmount": $sub_amount,
+     *   "tax": $tax,
+     *   "discount": $discount,
+     *   "description": $description,
+     *   "source": "API",
+     *   "currency": $currency,
+     *   "expiryDate": $expire_in,
+     *   "successURL": "https://pay.sh6.me/includes/test/",
+     *   "failureURL": "https://pay.sh6.me/includes/test/",
+     *   "maxPaymentsAllowed": 1
+     * }
+     * then will get response, then json parse it and get payment link.
+     * {
+     *  "status": 0,
+     *  "message": "PaymentLink generated",
+     *  "result": {
+     *   "subAmount": 1000,
+     *   "tax": 200,
+     *   "shippingCharge": 0,
+     *   "totalAmount": 900,
+     *   "invoiceNumber": "INV1714761498192",
+     *   "paymentLink": "https://v.payu.in/PAYUMN/RIMsTvRkOH4k",
+     *   "description": "Testing I1",
+     *   "active": true,
+     *   "isPartialPaymentAllowed": false,
+     *   "expiryDate": "2026-06-23 09:07:21",
+     *   "udf": {
+     *    "udf1": null,
+     *    "udf2": null,
+     *    "udf3": null,
+     *    "udf4": null,
+     *    "udf5": null
+     *   },
+     *   "address": {
+     *    "line1": "SN",
+     *    "line2": null,
+     *    "city": "Baddi",
+     *    "state": "HP",
+     *    "country": null,
+     *    "zipCode": "173205"
+     *   },
+     *   "emailStatus": "not opted",
+     *   "smsStatus": "not opted",
+     *   "currency": "INR",
+     *   "addedOn": "2025-03-12 21:58:19",
+     *   "status": "active",
+     *   "maxPaymentsAllowed": 1,
+     *   "customerName": "Shubham",
+     *   "customerPhone": "+919999999999",
+     *   "customerEmail": "shub@shubkb.com",
+     *   "notes": null,
+     *   "amountCollected": 0,
+     *   "dueAmount": 900,
+     *   "minAmountForCustomer": 1,
+     *   "adjustment": 0,
+     *   "discount": 300,
+     *   "customParams": null,
+     *   "transactionId": "TXN123456"
+     *  },
+     *  "errorCode": null,
+     *  "guid": "b8d46ef3-a131-4c9d-8c96-47dca5dbf1d6"
+     * }
+     * from this get invoiceNumber, payment link, guid in array and return it.
+     *
+     * @param string  $transaction_id Transaction ID.
+     * @param array   $user           Customer details.
+     * @param array   $address        Customer address.
+     * @param string  $description    Description.
+     * @param string  $currency       Currency.
+     * @param integer $sub_amount     Sub amount.
+     * @param integer $tax            Tax.
+     * @param integer $discount       Discount.
+     * @param integer $expire_in      Expiry time.
+     *
+     * @return array
+     */
+    private function get_payment_link($transaction_id, $user, $address, $description, $currency, $sub_amount, $tax = 0, $discount = 0, $expire_in = 3600) {
+        $access_token = $this->get_bearer();
+
+        // If no access token, return empty array.
+        if (empty($access_token)) {
+            error_log('PayU Payment Link Error: No access token available');
+            return array();
+        }
+
+        // Set API URL based on mode.
+        $api_url = ($this->mode === 'test')
+            ? 'https://uatoneapi.payu.in/payment-links'
+            : 'https://oneapi.payu.in/payment-links';
+
+        // Calculate expiry date.
+        $expiry_date = date('Y-m-d H:i:s', time() + $expire_in);
+
+        // Encrypt transaction ID.
+        $enc_transaction_id = $this->encrypt_decrypt('encrypt', $transaction_id);
+
+        // Prepare request payload.
+        $payload = array(
+                    'transactionId'            => $transaction_id,
+                    'isAmountFilledByCustomer' => false,
+                    'customer'                 => $user,
+                    'address'                  => $address,
+                    'subAmount'                => $sub_amount,
+                    'tax'                      => $tax,
+                    'discount'                 => $discount,
+                    'description'              => $description,
+                    'source'                   => 'API',
+                    'currency'                 => $currency,
+                    'expiryDate'               => $expiry_date,
+                    'successURL'               => 'https://pay.sh6.me/pay/success/' . $enc_transaction_id,
+                    'failureURL'               => 'https://pay.sh6.me/pay/failed/' . $enc_transaction_id,
+                    'maxPaymentsAllowed'       => 1,
+                   );
+
+        $json_payload = json_encode($payload);
+
+        // Initialize cURL session.
+        $ch = curl_init($api_url);
+
+        // Set cURL options.
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                                              'Content-Type: application/json',
+                                              'Content-Length: ' . strlen($json_payload),
+                                              'mid: ' . $this->mid,
+                                              'Authorization: Bearer ' . $access_token,
+                                             ));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+        // Execute cURL request.
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        // Close cURL session.
+        curl_close($ch);
+
+        // Check for errors.
+        if (!$response || $error) {
+            error_log('PayU Payment Link Error: ' . ($error ?: 'Unknown error'));
+            return array();
+        }
+
+        // Parse the response.
+        $api_response = json_decode($response, true);
+
+        // Check for API error.
+        if (empty($api_response) || isset($api_response['status']) && $api_response['status'] !== 0) {
+            $error_message = isset($api_response['message']) ? $api_response['message'] : 'Unknown error';
+            error_log('PayU Payment Link Error: ' . $error_message . ' - ' . $response);
+            return array();
+        }
+
+        // Extract required information.
+        $result = array();
+
+        if (!empty($api_response['result'])) {
+            $result = array(
+                       'invoiceNumber' => $api_response['result']['invoiceNumber'] ?? '',
+                       'paymentLink'   => $api_response['result']['paymentLink'] ?? '',
+                       'guid'          => $api_response['guid'] ?? '',
+                      );
+        }
+
+        return $result;
+    }
+
+    /**
      * Create Payment Link.
      */
     public function create_pay_link() {
         // Get Bearer Token.
-        $access_token = $this->get_bearer();
-        echo 'access_token: ' . $access_token . '<br>';
         $txnid = $this->create_transaction_id();
+        $payment_link = $this->get_payment_link(
+            $txnid,
+            array(
+             'name'  => 'Shubham',
+             'phone' => '+919999999999',
+             'email' => 'shub@shubkb.com',
+            ),
+            array(
+             'line1'   => 'SN',
+             'city'    => 'Baddi',
+             'state'   => 'HP',
+             'country' => 'India',
+             'zipCode' => '173205',
+            ),
+            'Testing I1',
+            'INR',
+            1000,
+            200,
+            300,
+            36000
+        );
+        echo '<pre>';
+        print_r($payment_link);
+        echo '</pre>';
         echo 'txnid: ' . $txnid . '<br>';
         $encrypted_txnid = $this->encrypt_decrypt('encrypt', $txnid);
         echo 'encrypted_txnid: ' . $encrypted_txnid . '<br>';
