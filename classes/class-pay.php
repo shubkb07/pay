@@ -64,6 +64,52 @@ class Pay
     }
 
     /**
+     * Update Latest Currency Rates.
+     */
+    public function update_latest_currency_rates() {
+        $fixer_access_key = get_option('fixer_access_key');
+        $fixer_url = 'https://data.fixer.io/api/latest?access_key=' . $fixer_access_key;
+
+        // Initialize cURL session.
+        $ch = curl_init($fixer_url);
+
+        // Set cURL options.
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+        // Execute cURL request.
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+
+        // Close cURL session.
+        curl_close($ch);
+
+        // Check for errors.
+        if (!$response || $error) {
+            error_log('Fixer API Error: ' . ($error ?: 'Unknown error'));
+            return false;
+        }
+
+        // Parse the response.
+        $api_response = json_decode($response, true);
+
+        // Check if rates exist in the response.
+        if (!isset($api_response['rates']) || !is_array($api_response['rates'])) {
+            error_log('Fixer API Error: Invalid response - ' . $response);
+            return false;
+        }
+
+        // Get rates from response.
+        $rates = json_encode($api_response['rates']);
+
+        // Update currency exchange rates option.
+        update_option('currency_exchange_rates', $rates);
+
+        return true;
+    }
+
+    /**
      * Create Transaction ID.
      *
      * @return string

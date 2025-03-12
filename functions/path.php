@@ -17,9 +17,25 @@ if (end($path) === '') {
 
 if (count($path) > 0) {
     if ($path[0] === 'api') {
+        $invalid_endpoint = json_encode(array('error' => 'Invalid API Endpoint'));
         header('Content-Type: application/json; charset=utf-8');
         if (count($path) === 4 && $path[1] === 'v1') {
-            if ($path[2] === 'webhook' && $path[3] === 'pay') {
+            if ($path[2] === 'webhook') {
+            } elseif ($path[2] === 'pay') {
+            } elseif ($path[2] === 'cron') {
+                if ($path[3] === 'daily') {
+                    require_once INC . 'functions/cron.php';
+                    daily_cron();
+                    echo json_encode(array('success' => 'Daily Cron Job'));
+                } elseif ($path[3] === 'hourly') {
+                    echo json_encode(array('success' => 'Hourly Cron Job'));
+                } elseif ($path[3] === 'minutely') {
+                    echo json_encode(array('success' => 'Minutely Cron Job'));
+                } else {
+                    echo $invalid_endpoint;
+                }
+            } else {
+                echo $invalid_endpoint;
             }
         }
     } elseif ($path[0] === 'pay') {
