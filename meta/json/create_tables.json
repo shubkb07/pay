@@ -106,12 +106,12 @@
             "created_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": "CURRENT_TIMESTAMP"
+                "default": "CURRENT_TIMESTAMP()"
             },
             "updated_at": {
                 "type": "datetime",
                 "nullable": true,
-                "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                "default": "CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()"
             }
         },
         "indexes": {
@@ -192,9 +192,10 @@
                 "default": null
             },
             "is_one_time_purchase": {
-                "type": "boolean",
+                "type": "varchar",
+                "length": 10,
                 "nullable": true,
-                "default": false
+                "default": "no"
             },
             "purchase_limit_per_user": {
                 "type": "int",
@@ -528,9 +529,10 @@
                 "default": null
             },
             "is_first_purchase_only": {
-                "type": "boolean",
+                "type": "varchar",
+                "length": 10,
                 "nullable": true,
-                "default": false
+                "default": "no"
             },
             "is_stackable": {
                 "type": "boolean",
