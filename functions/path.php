@@ -88,6 +88,9 @@ if (count($path) > 0) {
                         'country' => 'Example Country',
                        );
             echo '<pre>';
+            print_r($pay);
+            echo '</pre>';
+            echo '<pre>';
             print_r($pay->create_pay_link($user, $address, 1));
             echo '</pre>';
         } else {
