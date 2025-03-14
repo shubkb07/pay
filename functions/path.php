@@ -78,7 +78,7 @@ if (count($path) > 0) {
             $user = array(
                      'name'  => 'Shubham Kumar Bansal',
                      'email' => 'shub@shubkb.com',
-                     'phone' => '1234567890',
+                     'phone' => '+1 1234567890',
                     );
             $address = array(
                         'address' => '123, Example Street',

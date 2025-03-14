@@ -142,14 +142,19 @@ class Pay
         $random = rand(10000, 99999); // 5-digit random number.
         $txnid = 'TXN' . $timestamp . $random;
 
+        $this->encrypt_decrypt('encrypt', $txnid);
+        if ($txnid !== $this->encrypt_decrypt('decrypt', $this->encrypt_decrypt('encrypt', $txnid))) {
+            return $this->create_transaction_id();
+        }
+
         try {
-            // Check if DB constants are defined
+            // Check if DB constants are defined.
             if (!defined('DB_HOST') || !defined('DB_USER') || !defined('DB_PASS') || !defined('DB_NAME') || !defined('DB_PORT')) {
-                // Can't check database, return the generated ID
+                // Can't check database, return the generated ID.
                 return $txnid;
             }
-            
-            // Make sure to use full namespace path for Db class
+
+            // Make sure to use full namespace path for Db class.
             $db = new \Pay\Db();
             $result = $db->select_data('transactions', ['txnid'], ['txnid' => $txnid]);
 
@@ -158,9 +163,9 @@ class Pay
                 return $this->create_transaction_id();
             }
         } catch (\Exception $e) {
-            // Log the error but continue with the generated ID
+            // Log the error but continue with the generated ID.
             error_log('Transaction ID verification error: ' . $e->getMessage());
-            // In case of DB error, still return the generated ID
+            // In case of DB error, still return the generated ID.
         }
 
         return $txnid;
@@ -170,11 +175,11 @@ class Pay
      * Encrypt or decrypt a string using a simple XOR cipher.
      * The result is a URL-safe string consisting only of 0-9 and a-z.
      *
-     * @param string $action 'encrypt' or 'decrypt'
-     * @param string $string String to process
+     * @param string $action String 'encrypt' or 'decrypt'.
+     * @param string $string String to process.
      *
      * @return string Processed string
-     * @throws \Exception if invalid action or format is provided.
+     * @throws \Exception If invalid action or format is provided.
      */
     private function encrypt_decrypt($action, $string) {
         // Use the instance salt as the key for encryption/decryption.
@@ -667,17 +672,17 @@ class Pay
             return null;
         }
 
-        // $payment_link = $this->get_payment_link(
-        //     $transaction_id,
-        //     $user,
-        //     $address,
-        //     $product['name'] . ' - ' . $product['description'],
-        //     $currency,
-        //     $sub_amount,
-        //     $tax,
-        //     $discount,
-        //     $expire_in
-        // );
+        $payment_link = $this->get_payment_link(
+            $transaction_id,
+            $user,
+            $address,
+            $product['name'] . ' - ' . $product['description'],
+            $currency,
+            $sub_amount,
+            $tax,
+            $discount,
+            $expire_in
+        );
         echo '<pre>';
         print_r($product);
         echo '</pre>';
@@ -694,13 +699,23 @@ class Pay
                  $expire_in,
                 ]);
         echo '</pre>';
-        // echo '<pre>';
-        // print_r($payment_link);
-        // echo '</pre>';
+        echo '<pre>';
+        print_r($payment_link);
+        echo '</pre>';
         echo 'txnid: ' . $transaction_id . '<br>';
         $encrypted_txnid = $this->encrypt_decrypt('encrypt', $transaction_id);
         echo 'encrypted_txnid: ' . $encrypted_txnid . '<br>';
         $decrypted_txnid = $this->encrypt_decrypt('decrypt', $encrypted_txnid);
         echo 'decrypted_txnid: ' . $decrypted_txnid . '<br>';
+        array(
+         'invoiceNumber' => $api_response['result']['invoiceNumber'] ?? '',
+         'paymentLink'   => $api_response['result']['paymentLink'] ?? '',
+         'guid'          => $api_response['guid'] ?? '',
+        );
+        return array(
+                'transaction_id'  => $transaction_id,
+                'shareable_link'  => $shareable_link,
+                'invoice_number'  => $invoice_number,
+               );
     }
 }
