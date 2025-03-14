@@ -432,6 +432,8 @@ class Pay
     private function get_payment_link($transaction_id, $user, $address, $description, $currency, $sub_amount, $tax = 0, $discount = 0, $expire_in = 3600) {
         $access_token = $this->get_bearer();
 
+        print_r('Reaching here 2');
+
         // If no access token, return empty array.
         if (empty($access_token)) {
             error_log('PayU Payment Link Error: No access token available');
@@ -443,22 +445,8 @@ class Pay
             ? 'https://uatoneapi.payu.in/payment-links'
             : 'https://oneapi.payu.in/payment-links';
 
-        // Calculate expiry date with proper timezone and format
-        // Use a date in the future with a more explicit format
-        // Calculate date in GMT/UTC (which PayU likely uses)
-        $date = new \DateTime('now', new \DateTimeZone('UTC'));
-        $date->modify('+' . intval($expire_in) . ' seconds');
-        
-        // Format according to ISO 8601 which is widely accepted
-        $expiry_date = $date->format('Y-m-d\TH:i:s\Z');
-        
-        // Make sure it's at least 1 day in the future to avoid any timezone issues
-        $min_date = new \DateTime('now', new \DateTimeZone('UTC'));
-        $min_date->modify('+1 day');
-        if ($date < $min_date) {
-            $date = $min_date;
-            $expiry_date = $date->format('Y-m-d\TH:i:s\Z');
-        }
+        // Calculate expiry date.
+        $expiry_date = date('Y-m-d H:i:s', time() + $expire_in);
 
         // Encrypt transaction ID.
         $enc_transaction_id = $this->encrypt_decrypt('encrypt', $transaction_id);
@@ -475,15 +463,14 @@ class Pay
                     'description'              => $description,
                     'source'                   => 'API',
                     'currency'                 => $currency,
-                    'expiryDate'               => $date->format('Y-m-d H:i:s'),  // Use standard MySQL format
-                    'timeUnit'                 => 'SECOND',  // Specify the time unit for expiryDate
+                    'expiryDate'               => $expiry_date,
                     'successURL'               => 'https://pay.sh6.me/pay/success/' . $enc_transaction_id,
                     'failureURL'               => 'https://pay.sh6.me/pay/failed/' . $enc_transaction_id,
                     'maxPaymentsAllowed'       => 1,
                    );
 
-        // Log the payload for debugging
-        error_log('PayU Payment Link Payload: ' . json_encode($payload));
+        print_r('Reaching here 2a');
+        print_r($payload);
 
         $json_payload = json_encode($payload);
 
@@ -630,7 +617,7 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $expire_in = 3600, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
+    public function create_pay_link($user, $address, $product_id, $expire_in = 3600, $currency_in = 'EUR', $coupon = '', $tax_percentage = null, $transaction_id = null) {
 
         global $db;
 
