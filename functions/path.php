@@ -48,7 +48,7 @@ if (count($path) > 0) {
                 include_once ASSETS . 'pages/failed.php';
             } elseif ($path[1] === 'p') {
                 echo '<pre>';
-                print_r($_GET);
+                print_r(isset($_GET['qr']));
                 echo '</pre>';
                 // if ($_GET['qr']) {
                 //     // QR to current page.
