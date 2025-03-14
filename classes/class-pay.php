@@ -432,7 +432,7 @@ class Pay
     private function get_payment_link($transaction_id, $user, $address, $description, $currency, $sub_amount, $tax = 0, $discount = 0, $expire_in = 3600) {
         $access_token = $this->get_bearer();
 
-        var_dump('Reaching here 2');
+        print_r('Reaching here 2');
 
         // If no access token, return empty array.
         if (empty($access_token)) {
@@ -676,7 +676,7 @@ class Pay
 
         $subamount = $product['price'];
 
-        var_dump('Reaching here 1');
+        print_r('Reaching here 1');
         $payment_link = $this->get_payment_link(
             $transaction_id,
             $user,
@@ -688,7 +688,7 @@ class Pay
             $discount,
             $expire_in
         );
-        var_dump('Reaching here 3');
+        print_r('Reaching here 3');
         echo '<pre>';
         print_r($product);
         echo '</pre>';
