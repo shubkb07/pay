@@ -47,6 +47,9 @@ if (count($path) > 0) {
             } elseif ($path[1] === 'failed') {
                 include_once ASSETS . 'pages/failed.php';
             } elseif ($path[1] === 'p') {
+                echo '<pre>';
+                print_r($_GET['qr']);
+                echo '</pre>';
                 if ($_GET['qr']) {
                     // QR to current page.
                     header('Content-Type: image/png');
