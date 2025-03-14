@@ -608,6 +608,8 @@ class Pay
      */
     public function create_pay_link($user, $address, $product_id, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
 
+        global $db;
+
         // If transaction ID is not provided, create a new one.
         if (empty($transaction_id)) {
             $transaction_id = $this->create_transaction_id();
@@ -617,6 +619,40 @@ class Pay
         if (empty($user) || empty($address) || !is_array($user) || !is_array($address)) {
             return null;
         }
+
+        // If currency is not provided, use base currency.
+        if (empty($currency_in)) {
+            $currency = $this->base_currency;
+        } else {
+            $currency = $currency_in;
+        }
+
+        // Check Product ID is not empty and is integer, then get product details.
+        if (empty($product_id) || !is_numeric($product_id)) {
+            return null;
+        }
+
+        // Get product details from database.
+        global $db;
+        if (!isset($db) || !($db instanceof \Pay\Db)) {
+            $db = new \Pay\Db();
+        }
+
+        try {
+            $product = $db->select_data('products', ['*'], ['id' => $product_id]);
+
+            // If product not found, return null.
+            if (empty($product)) {
+                return null;
+            }
+
+            // Get the first (and should be only) product from the result.
+            $product = $product[0];
+        } catch (\Exception $e) {
+            error_log('Error retrieving product details: ' . $e->getMessage());
+            return null;
+        }
+
         // $payment_link = $this->get_payment_link(
         //     $txnid,
         //     $user,
@@ -628,9 +664,9 @@ class Pay
         //     300,
         //     36000
         // );
-        // echo '<pre>';
-        // print_r($payment_link);
-        // echo '</pre>';
+        echo '<pre>';
+        print_r($product);
+        echo '</pre>';
         echo 'txnid: ' . $txnid . '<br>';
         $encrypted_txnid = $this->encrypt_decrypt('encrypt', $txnid);
         echo 'encrypted_txnid: ' . $encrypted_txnid . '<br>';
