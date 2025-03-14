@@ -606,30 +606,23 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $currency_in, $coupon = '') {
-        // Get Bearer Token.
-        $txnid = $this->create_transaction_id();
-        $payment_link = $this->get_payment_link(
-            $txnid,
-            array(
-             'name'  => 'Shubham',
-             'phone' => '+919999999999',
-             'email' => 'shub@shubkb.com',
-            ),
-            array(
-             'line1'   => 'SN',
-             'city'    => 'Baddi',
-             'state'   => 'HP',
-             'country' => 'India',
-             'zipCode' => '173205',
-            ),
-            'Testing I1',
-            'INR',
-            1000,
-            200,
-            300,
-            36000
-        );
+    public function create_pay_link($user, $address, $product_id, $currency_in, $coupon = '', $tax_percentage = null, $transaction_id = null) {
+
+        // If transaction ID is not provided, create a new one.
+        if (empty($transaction_id)) {
+            $transaction_id = $this->create_transaction_id();
+        }
+        // $payment_link = $this->get_payment_link(
+        //     $txnid,
+        //     $user,
+        //     $address,
+        //     'Testing I1',
+        //     'INR',
+        //     1000,
+        //     200,
+        //     300,
+        //     36000
+        // );
         echo '<pre>';
         print_r($payment_link);
         echo '</pre>';
