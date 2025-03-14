@@ -672,6 +672,8 @@ class Pay
             return null;
         }
 
+        $subamount = $product['price'];
+
         $payment_link = $this->get_payment_link(
             $transaction_id,
             $user,
