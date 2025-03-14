@@ -34,7 +34,7 @@ if (count($path) > 0) {
                 } else {
                     echo $invalid_endpoint;
                 }
-            } elseif ($path[3] === 'qr') {
+            } elseif ($path[2] === 'qr') {
                 if ($path[3] === 'generate') {
                     if (isset($_GET['text'])) {
                         // Remove json header and set content type to png.
