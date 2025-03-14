@@ -37,7 +37,7 @@ if (count($path) > 0) {
             } elseif ($path[3] === 'qr') {
                 if ($path[3] === 'generate') {
                     if (isset($_GET['text'])) {
-                        // remove json header and set content type to png.
+                        // Remove json header and set content type to png.
                         header('Content-Type: image/png');
                         echo qr_code($_GET['text']);
                     } else {
