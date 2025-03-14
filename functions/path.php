@@ -34,18 +34,6 @@ if (count($path) > 0) {
                 } else {
                     echo $invalid_endpoint;
                 }
-            } elseif ($path[2] === 'qr') {
-                if ($path[3] === 'generate') {
-                    if (isset($_GET['text'])) {
-                        // Remove json header and set content type to png.
-                        header('Content-Type: image/png');
-                        echo qr_code($_GET['text']);
-                    } else {
-                        echo json_encode(array('error' => 'Invalid Data'));
-                    }
-                } else {
-                    echo $invalid_endpoint;
-                }
             } else {
                 echo $invalid_endpoint;
             }
@@ -59,7 +47,13 @@ if (count($path) > 0) {
             } elseif ($path[1] === 'failed') {
                 include_once ASSETS . 'pages/failed.php';
             } elseif ($path[1] === 'p') {
-                include_once ASSETS . 'pages/pay.php';
+                if ($_GET['qr']) {
+                    // QR to current page.
+                    header('Content-Type: image/png');
+                    echo qr_code('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                } else {
+                    include_once ASSETS . 'pages/pay.php';
+                }
             } elseif ($path[1] === 'o') {
                 $pay->redirect_pay($pay_id);
             } else {
