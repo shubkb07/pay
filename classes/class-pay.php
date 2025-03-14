@@ -653,22 +653,36 @@ class Pay
             return null;
         }
 
-        // $payment_link = $this->get_payment_link(
-        //     $txnid,
-        //     $user,
-        //     $address,
-        //     'Testing I1',
-        //     'INR',
-        //     1000,
-        //     200,
-        //     300,
-        //     36000
-        // );
+        $payment_link = $this->get_payment_link(
+            $transaction_id,
+            $user,
+            $address,
+            $product['description'],
+            $currency,
+            1000,
+            200,
+            300,
+            36000
+        );
         echo '<pre>';
         print_r($product);
         echo '</pre>';
-        echo 'txnid: ' . $txnid . '<br>';
-        $encrypted_txnid = $this->encrypt_decrypt('encrypt', $txnid);
+        echo '<pre>';
+        print_r([$transaction_id,
+        $user,
+        $address,
+        $product['description'],
+        $currency,
+        1000,
+        200,
+        300,
+        36000]);
+        echo '</pre>';
+        echo '<pre>';
+        print_r($payment_link);
+        echo '</pre>';
+        echo 'txnid: ' . $transaction_id . '<br>';
+        $encrypted_txnid = $this->encrypt_decrypt('encrypt', $transaction_id);
         echo 'encrypted_txnid: ' . $encrypted_txnid . '<br>';
         $decrypted_txnid = $this->encrypt_decrypt('decrypt', $encrypted_txnid);
         echo 'decrypted_txnid: ' . $decrypted_txnid . '<br>';
