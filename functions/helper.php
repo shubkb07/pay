@@ -40,7 +40,7 @@ function qr_code($data) {
 
     // Generate the QR code.
     ob_start();
-    QRcode::png($data, null, QR_ECLEVEL_L, 10, 20);
+    QRcode::png($data, null, QR_ECLEVEL_L, 10, 2);
     $image_data = ob_get_contents();
     ob_end_clean();
 
