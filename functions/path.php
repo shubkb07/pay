@@ -75,8 +75,20 @@ if (count($path) > 0) {
             print_r(create_tables());
             echo '</pre>';
         } elseif ($path[0] === 'p') {
+            $user = array(
+                     'name'  => 'Shubham Kumar Bansal',
+                     'email' => 'shub@shubkb.com',
+                     'phone' => '1234567890',
+                    );
+            $address = array(
+                        'address' => '123, Example Street',
+                        'city'    => 'Example City',
+                        'state'   => 'Example State',
+                        'zip'     => '123456',
+                        'country' => 'Example Country',
+                       );
             echo '<pre>';
-            print_r($pay->create_pay_link());
+            print_r($pay->create_pay_link($user, $address, 1));
             echo '</pre>';
         } else {
             include_once ASSETS . 'pages/404.php';
