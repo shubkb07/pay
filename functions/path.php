@@ -34,6 +34,18 @@ if (count($path) > 0) {
                 } else {
                     echo $invalid_endpoint;
                 }
+            } elseif ($path[3] === 'qr') {
+                if ($path[3] === 'generate') {
+                    if (isset($_GET['text'])) {
+                        // remove json header and set content type to png.
+                        header('Content-Type: image/png');
+                        echo qr_code($_GET['text']);
+                    } else {
+                        echo json_encode(array('error' => 'Invalid Data'));
+                    }
+                } else {
+                    echo $invalid_endpoint;
+                }
             } else {
                 echo $invalid_endpoint;
             }

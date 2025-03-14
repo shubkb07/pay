@@ -39,6 +39,18 @@ class Pay
     private $bearer;
 
     /*
+     * Base Currency.
+     */
+
+    private $base_currency;
+
+    /*
+     * Base Currency Tax Percentage.
+     */
+
+    private $base_currency_tax_percentage;
+
+    /*
      * Salt.
      */
 
@@ -50,6 +62,12 @@ class Pay
 
     private $key;
 
+    /*
+     * Conversion Rates.
+     */
+
+    private $conversion_rates;
+
     /**
      * Constructor.
      */
@@ -59,8 +77,11 @@ class Pay
         $this->mid = get_option('payu_mid');
         $this->mode = get_option('payu_mode');
         $this->bearer = get_option('payu_bearer');
+        $this->base_currency = get_option('payu_base_currency');
+        $this->base_currency_tax_percentage = get_option('payu_base_currency_tax_percentage');
         $this->salt = get_option('payu_salt_32');
         $this->key = get_option('payu_salt_256');
+        $this->conversion_rates = get_option('currency_exchange_rates');
     }
 
     /**
@@ -498,9 +519,94 @@ class Pay
     }
 
     /**
+     * Can Coupon Be Applied.
+     */
+    public function can_coupon_be_applied($email, $coupon, $product_id) {
+    }
+
+    /**
+     * Apply Coupon.
+     */
+    public function apply_coupon($email, $coupon, $product_id) {}
+
+    /**
+     * Discount Calculation.
+     *
+     * @param float $amount        Amount to calculate discount on.
+     * @param string $discount_type Discount type pecentage or fixed.
+     * @param float $discount_value Discount value.
+     *
+     * @return float
+     */
+    public function discount_calculation($amount, $discount_type, $discount_value) {
+        if ($discount_type === 'percentage') {
+            $discount = ($amount * $discount_value) / 100;
+        } elseif ($discount_type === 'fixed') {
+            $discount = $discount_value;
+        } else {
+            $discount = 0;
+        }
+
+        // Round off to 2 decimal places.
+        return round($discount, 2);
+    }
+
+    /**
+     * Currency Conversion.
+     *
+     * @param float $amount Amount to convert.
+     */
+    public function currency_conversion($amount, $to_currency, $from_currency = null) {
+
+        // If from currency is not provided, use base currency.
+        if (empty($from_currency)) {
+            $from_currency = $this->base_currency;
+        }
+
+        $rates = json_decode($this->conversion_rates, true);
+
+        // Check if rates exist.
+        if (empty($rates) || !is_array($rates)) {
+            return 0;
+        }
+
+        // Check if conversion is required.
+        if ($from_currency === $to_currency) {
+            return $amount;
+        }
+
+        // Check if rates are available.
+        if (!isset($rates[$from_currency]) || !isset($rates[$to_currency])) {
+            return 0;
+        }
+
+        // Convert amount.
+        $converted_amount = $amount * ($rates[$to_currency] / $rates[$from_currency]);
+
+        // Round off to 2 decimal places.
+        return round($converted_amount, 2);
+    }
+
+    /*
+     * Tax Calculation.
+     */
+    public function tax_calculation($amount, $tax_percentage = null) {
+        // If tax percentage is not provided, use base currency tax percentage.
+        if (empty($tax_percentage)) {
+            $tax_percentage = $this->base_currency_tax_percentage;
+        }
+
+        // Calculate tax.
+        $tax = ($amount * $tax_percentage) / 100;
+
+        // Round off to 2 decimal places.
+        return round($tax, 2);
+    }
+
+    /**
      * Create Payment Link.
      */
-    public function create_pay_link() {
+    public function create_pay_link($user, $address, $product_id, $currency_in, $coupon = '') {
         // Get Bearer Token.
         $txnid = $this->create_transaction_id();
         $payment_link = $this->get_payment_link(
