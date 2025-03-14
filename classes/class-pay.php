@@ -511,6 +511,7 @@ class Pay
         if (empty($api_response) || isset($api_response['status']) && $api_response['status'] !== 0) {
             $error_message = isset($api_response['message']) ? $api_response['message'] : 'Unknown error';
             error_log('PayU Payment Link Error: ' . $error_message . ' - ' . $response);
+            print_r($api_response);
             return array();
         }
 
