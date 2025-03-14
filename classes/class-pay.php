@@ -612,6 +612,11 @@ class Pay
         if (empty($transaction_id)) {
             $transaction_id = $this->create_transaction_id();
         }
+
+        // Check If User and Address is not empty and are in correct format.
+        if (empty($user) || empty($address) || !is_array($user) || !is_array($address)) {
+            return null;
+        }
         // $payment_link = $this->get_payment_link(
         //     $txnid,
         //     $user,
@@ -623,9 +628,9 @@ class Pay
         //     300,
         //     36000
         // );
-        echo '<pre>';
-        print_r($payment_link);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($payment_link);
+        // echo '</pre>';
         echo 'txnid: ' . $txnid . '<br>';
         $encrypted_txnid = $this->encrypt_decrypt('encrypt', $txnid);
         echo 'encrypted_txnid: ' . $encrypted_txnid . '<br>';
