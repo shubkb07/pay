@@ -606,9 +606,13 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
+    public function create_pay_link($user, $address, $product_id, $expire_in = 3600, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
 
         global $db;
+
+        $discount = 0;
+        $sub_amount = 0;
+        $tax = 0;
 
         // If transaction ID is not provided, create a new one.
         if (empty($transaction_id)) {
@@ -627,8 +631,18 @@ class Pay
             $currency = $currency_in;
         }
 
+        // Tax Percentage is not provided, use base currency tax percentage.
+        if (empty($tax_percentage)) {
+            $tax_percentage = $this->base_currency_tax_percentage;
+        }
+
         // Check Product ID is not empty and is integer, then get product details.
         if (empty($product_id) || !is_numeric($product_id)) {
+            return null;
+        }
+
+        // Expire in must be integer and more than 300 seconds.
+        if (!is_numeric($expire_in) || $expire_in < 300) {
             return null;
         }
 
@@ -653,34 +667,36 @@ class Pay
             return null;
         }
 
-        $payment_link = $this->get_payment_link(
-            $transaction_id,
-            $user,
-            $address,
-            $product['description'],
-            $currency,
-            1000,
-            200,
-            300,
-            36000
-        );
+        // $payment_link = $this->get_payment_link(
+        //     $transaction_id,
+        //     $user,
+        //     $address,
+        //     $product['name'] . ' - ' . $product['description'],
+        //     $currency,
+        //     $sub_amount,
+        //     $tax,
+        //     $discount,
+        //     $expire_in
+        // );
         echo '<pre>';
         print_r($product);
         echo '</pre>';
         echo '<pre>';
-        print_r([$transaction_id,
-        $user,
-        $address,
-        $product['description'],
-        $currency,
-        1000,
-        200,
-        300,
-        36000]);
+        print_r([
+                 $transaction_id,
+                 $user,
+                 $address,
+                 $product['name'] . ' - ' . $product['description'],
+                 $currency,
+                 $sub_amount,
+                 $tax,
+                 $discount,
+                 $expire_in,
+                ]);
         echo '</pre>';
-        echo '<pre>';
-        print_r($payment_link);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($payment_link);
+        // echo '</pre>';
         echo 'txnid: ' . $transaction_id . '<br>';
         $encrypted_txnid = $this->encrypt_decrypt('encrypt', $transaction_id);
         echo 'encrypted_txnid: ' . $encrypted_txnid . '<br>';
