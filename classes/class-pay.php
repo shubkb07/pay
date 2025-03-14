@@ -445,8 +445,11 @@ class Pay
             ? 'https://uatoneapi.payu.in/payment-links'
             : 'https://oneapi.payu.in/payment-links';
 
-        // Calculate expiry date.
-        $expiry_date = date('Y-m-d H:i:s', time() + $expire_in);
+        // Calculate expiry date in IST
+        $dt = new \DateTime();
+        $dt->setTimezone(new \DateTimeZone('Asia/Kolkata')); // 'Asia/Kolkata' represents IST
+        $dt->modify('+' . $expire_in . ' seconds');
+        $expiry_date = $dt->format('Y-m-d H:i:s');
 
         // Encrypt transaction ID.
         $enc_transaction_id = $this->encrypt_decrypt('encrypt', $transaction_id);
@@ -617,7 +620,7 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $expire_in = 3600, $currency_in = 'EUR', $coupon = '', $tax_percentage = null, $transaction_id = null) {
+    public function create_pay_link($user, $address, $product_id, $expire_in = 3600, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
 
         global $db;
 
