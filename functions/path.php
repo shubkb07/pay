@@ -48,15 +48,15 @@ if (count($path) > 0) {
                 include_once ASSETS . 'pages/failed.php';
             } elseif ($path[1] === 'p') {
                 echo '<pre>';
-                print_r($_GET['qr']);
+                print_r($_GET);
                 echo '</pre>';
-                if ($_GET['qr']) {
-                    // QR to current page.
-                    header('Content-Type: image/png');
-                    echo qr_code('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-                } else {
-                    include_once ASSETS . 'pages/pay.php';
-                }
+                // if ($_GET['qr']) {
+                //     // QR to current page.
+                //     header('Content-Type: image/png');
+                //     echo qr_code('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                // } else {
+                //     include_once ASSETS . 'pages/pay.php';
+                // }
             } elseif ($path[1] === 'o') {
                 $pay->redirect_pay($pay_id);
             } else {
