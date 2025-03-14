@@ -432,6 +432,8 @@ class Pay
     private function get_payment_link($transaction_id, $user, $address, $description, $currency, $sub_amount, $tax = 0, $discount = 0, $expire_in = 3600) {
         $access_token = $this->get_bearer();
 
+        print_r('access token: ' . $access_token);
+
         // If no access token, return empty array.
         if (empty($access_token)) {
             error_log('PayU Payment Link Error: No access token available');
