@@ -469,6 +469,8 @@ class Pay
                     'maxPaymentsAllowed'       => 1,
                    );
 
+        print_r($payload);
+
         $json_payload = json_encode($payload);
 
         // Initialize cURL session.
