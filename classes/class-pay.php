@@ -677,7 +677,7 @@ class Pay
             return null;
         }
 
-        $subamount = $product['price'];
+        $sub_amount = $product['price'];
 
         print_r('Reaching here 1');
         $payment_link = $this->get_payment_link(
