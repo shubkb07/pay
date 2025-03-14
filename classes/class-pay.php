@@ -606,7 +606,7 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $currency_in, $coupon = '', $tax_percentage = null, $transaction_id = null) {
+    public function create_pay_link($user, $address, $product_id, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
 
         // If transaction ID is not provided, create a new one.
         if (empty($transaction_id)) {
