@@ -48,9 +48,15 @@ if (count($path) > 0) {
                 include_once ASSETS . 'pages/failed.php';
             } elseif ($path[1] === 'p') {
                 if (isset($_GET['qr'])) {
-                    // QR to current page.
+                    // QR to current page without search params.
                     header('Content-Type: image/png');
-                    echo qr_code('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                    echo qr_code(
+                        (
+                            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://'
+                        )
+                        . $_SERVER['HTTP_HOST']
+                        . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+                    );
                 } else {
                     include_once ASSETS . 'pages/pay.php';
                 }
