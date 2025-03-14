@@ -469,6 +469,7 @@ class Pay
                     'maxPaymentsAllowed'       => 1,
                    );
 
+        print_r('Reaching here 2a');
         print_r($payload);
 
         $json_payload = json_encode($payload);
