@@ -25,7 +25,7 @@ function jwt_decode_token($token) {
     include_once INC . 'lib/php-jwt/src/Key.php';
     $key = 'secret';
     $header = new StdClass();
-    $decoded = JWT::decode($jwt, new Key($key, 'HS256'), $header);
+    $decoded = JWT::decode($token, new Key($key, 'HS256'), $header);
     return [$header, $decoded];
 }
 
