@@ -23,9 +23,9 @@ function jwt_create_token($data) {
 function jwt_decode_token($token) {
     include_once INC . 'lib/firebase/php-jwt/src/JWT.php';
     include_once INC . 'lib/firebase/php-jwt/src/Key.php';
-    // $key = 'secret';
+    $key = 'secret';
     // $header = new StdClass();
-    // $decoded = JWT::decode($jwt, new Key($key, 'HS256'), $headers);
+    $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
     // return [$header, $decoded];
 }
 
