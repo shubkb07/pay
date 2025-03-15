@@ -37,5 +37,5 @@ $token = jwt_create_token($text);
 echo '<br>';
 var_dump($token);
 echo '<br>';
-// var_dump(jwt_decode_token($token));
+var_dump(jwt_decode_token($token));
 echo '<br>';
