@@ -285,86 +285,245 @@ document.addEventListener('DOMContentLoaded', () => {
             // Initialize filterable dropdowns
             this.initFilterableDropdown('country', this.getCountriesFromGeoData());
             this.initFilterableDropdown('phone-code', this.getPhoneCodesFromGeoData());
-            this.initFilterableDropdown('state', []); // Initially empty until country is selected
             
             // Set up country change event to update states
             const countryInput = document.getElementById('country');
+            const stateContainer = document.getElementById('state-container');
             const stateSearchInput = document.getElementById('state-search');
+            const stateInput = document.getElementById('state');
+            const submitButton = document.getElementById('billing-submit');
+            
+            // Initially hide the state dropdown until country is selected
+            if (stateContainer) {
+                stateContainer.classList.add('hidden');
+            }
             
             if (countryInput) {
                 countryInput.addEventListener('change', () => {
                     const countryCode = countryInput.value;
+                    
+                    // Reset state field
+                    if (stateInput) stateInput.value = '';
+                    if (stateSearchInput) stateSearchInput.value = '';
+                    
                     if (countryCode) {
                         const stateOptions = this.getStatesFromGeoData(countryCode);
-                        this.updateFilterableDropdown('state', stateOptions);
-                        if (stateSearchInput) {
-                            stateSearchInput.disabled = false;
+                        
+                        // Show/hide state field based on whether the country has states
+                        if (stateContainer) {
+                            if (stateOptions.length > 0) {
+                                stateContainer.classList.remove('hidden');
+                                this.updateFilterableDropdown('state', stateOptions);
+                                if (stateSearchInput) {
+                                    stateSearchInput.disabled = false;
+                                }
+                            } else {
+                                stateContainer.classList.add('hidden');
+                                // Set state to "N/A" for countries without states
+                                if (stateInput) stateInput.value = 'N/A';
+                            }
                         }
                     } else {
-                        this.updateFilterableDropdown('state', []);
+                        // No country selected, hide state field
+                        if (stateContainer) {
+                            stateContainer.classList.add('hidden');
+                        }
                         if (stateSearchInput) {
                             stateSearchInput.disabled = true;
                             stateSearchInput.value = '';
                         }
                     }
+                    
+                    // Update button state
+                    this.updateSubmitButtonState();
                 });
             }
+            
+            // Initialize state dropdown if needed
+            this.initFilterableDropdown('state', []);
             
             // Form validation
             this.forms.billing.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
                 // Validate all required fields
-                let isValid = true;
-                
-                // Required fields to validate
-                const fieldsToValidate = [
-                    { id: 'name', message: 'Full name is required' },
-                    { id: 'address1', message: 'Address is required' },
-                    { id: 'city', message: 'City is required' },
-                    { id: 'postal_code', message: 'Postal code is required' },
-                    { id: 'country', message: 'Please select a country' },
-                    { id: 'state', message: 'Please select a state/province' },
-                    { id: 'phonecode', message: 'Please select a phone code' },
-                    { id: 'phone', message: 'Phone number is required' }
-                ];
-                
-                // Clear all previous errors
-                fieldsToValidate.forEach(field => {
-                    const errorElement = document.getElementById(`${field.id}-error`);
-                    if (errorElement) errorElement.classList.add('hidden');
-                });
-                
-                // Check each field
-                fieldsToValidate.forEach(field => {
-                    const inputElement = document.getElementById(field.id);
-                    if (!inputElement || !inputElement.value.trim()) {
-                        this.showError(field.id, field.message);
-                        isValid = false;
-                    }
-                });
-                
-                // Phone validation
-                const phoneInput = document.getElementById('phone');
-                if (phoneInput && phoneInput.value.trim() && !this.isValidPhone(phoneInput.value.trim())) {
-                    this.showError('phone', 'Please enter a valid phone number');
-                    isValid = false;
-                }
-                
-                // Submit if all valid
-                if (isValid) {
-                    this.forms.billing.submit();
+                if (this.validateBillingForm()) {
+                    // Submit form data via AJAX
+                    this.submitBillingForm();
                 }
             });
             
-            // Add input event listeners to clear errors
+            // Add input event listeners to clear errors and update button state
             const formInputs = this.forms.billing.querySelectorAll('input');
             formInputs.forEach(input => {
                 input.addEventListener('input', () => {
                     const errorId = input.id.replace('-search', '');
                     const errorElement = document.getElementById(`${errorId}-error`);
                     if (errorElement) errorElement.classList.add('hidden');
+                    
+                    // Update button state
+                    this.updateSubmitButtonState();
                 });
+            });
+        },
+        
+        // Validate billing form
+        validateBillingForm() {
+            let isValid = true;
+            
+            // Required fields to validate
+            const fieldsToValidate = [
+                { id: 'name', message: 'Full name is required' },
+                { id: 'address1', message: 'Address is required' },
+                { id: 'city', message: 'City is required' },
+                { id: 'postal_code', message: 'Postal code is required' },
+                { id: 'country', message: 'Please select a country' },
+                { id: 'phonecode', message: 'Please select a phone code' },
+                { id: 'phone', message: 'Phone number is required' }
+            ];
+            
+            // Clear all previous errors
+            fieldsToValidate.forEach(field => {
+                const errorElement = document.getElementById(`${field.id}-error`);
+                if (errorElement) errorElement.classList.add('hidden');
+            });
+            
+            // Check each field
+            fieldsToValidate.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (!inputElement || !inputElement.value.trim()) {
+                    this.showError(field.id, field.message);
+                    isValid = false;
+                }
+            });
+            
+            // State validation - only required if country has states
+            const countryCode = document.getElementById('country').value;
+            const stateContainer = document.getElementById('state-container');
+            
+            if (countryCode && !stateContainer.classList.contains('hidden')) {
+                const stateInput = document.getElementById('state');
+                if (!stateInput || !stateInput.value.trim()) {
+                    this.showError('state', 'Please select a state/province');
+                    isValid = false;
+                }
+            }
+            
+            // Phone validation
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput && phoneInput.value.trim() && !this.isValidPhone(phoneInput.value.trim())) {
+                this.showError('phone', 'Please enter a valid phone number');
+                isValid = false;
+            }
+            
+            return isValid;
+        },
+        
+        // Update submit button state based on form validation
+        updateSubmitButtonState() {
+            const submitButton = document.getElementById('billing-submit');
+            if (!submitButton) return;
+            
+            // Get all required input values
+            const nameValue = document.getElementById('name')?.value.trim() || '';
+            const address1Value = document.getElementById('address1')?.value.trim() || '';
+            const cityValue = document.getElementById('city')?.value.trim() || '';
+            const postalCodeValue = document.getElementById('postal_code')?.value.trim() || '';
+            const countryValue = document.getElementById('country')?.value.trim() || '';
+            const phonecodeValue = document.getElementById('phonecode')?.value.trim() || '';
+            const phoneValue = document.getElementById('phone')?.value.trim() || '';
+            
+            // Check state if needed
+            let stateValid = true;
+            const stateContainer = document.getElementById('state-container');
+            if (countryValue && stateContainer && !stateContainer.classList.contains('hidden')) {
+                const stateValue = document.getElementById('state')?.value.trim() || '';
+                stateValid = stateValue !== '';
+            }
+            
+            // Check if all fields are filled
+            const allFilled = nameValue !== '' && 
+                             address1Value !== '' && 
+                             cityValue !== '' && 
+                             postalCodeValue !== '' && 
+                             countryValue !== '' && 
+                             phonecodeValue !== '' && 
+                             phoneValue !== '' && 
+                             stateValid;
+            
+            // Enable/disable button
+            submitButton.disabled = !allFilled;
+            
+            if (allFilled) {
+                submitButton.classList.remove('bg-blue-400', 'cursor-not-allowed');
+                submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            } else {
+                submitButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                submitButton.classList.add('bg-blue-400', 'cursor-not-allowed');
+            }
+        },
+        
+        // Submit billing form via AJAX
+        submitBillingForm() {
+            // Show loading state
+            const submitButton = document.getElementById('billing-submit');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            }
+            
+            // Gather form data
+            const billingData = {
+                billing: {
+                    name: document.getElementById('name').value.trim(),
+                    address1: document.getElementById('address1').value.trim(),
+                    address2: document.getElementById('address2').value.trim(),
+                    city: document.getElementById('city').value.trim(),
+                    state: document.getElementById('state').value.trim(),
+                    postal_code: document.getElementById('postal_code').value.trim(),
+                    country: document.getElementById('country').value.trim(),
+                    phone: `+${document.getElementById('phonecode').value}${document.getElementById('phone').value.trim()}`
+                }
+            };
+            
+            // Send API request
+            fetch('/api/v1/billing', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(billingData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Redirect to the next page or show success
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    // For testing purposes, just reload
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting billing information:', error);
+                
+                // Show error message
+                const formError = document.getElementById('form-error');
+                if (formError) {
+                    formError.textContent = 'Error submitting your information. Please try again.';
+                    formError.classList.remove('hidden');
+                }
+                
+                // Reset button
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Continue to Payment';
+                }
             });
         },
         

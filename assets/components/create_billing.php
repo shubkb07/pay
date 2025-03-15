@@ -5,6 +5,11 @@
         Please provide your billing information to complete your order.
     </p>
     
+    <!-- Display form errors -->
+    <div id="form-error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 hidden" role="alert">
+        <span class="block sm:inline"></span>
+    </div>
+    
     <form id="billing-form" method="post" action="" class="space-y-6">
         <!-- Full Name -->
         <div class="space-y-2">
@@ -120,7 +125,7 @@
             </div>
             
             <!-- Custom dropdown for state/province with search -->
-            <div class="space-y-2">
+            <div id="state-container" class="space-y-2 hidden">
                 <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     State/Province
                 </label>
@@ -194,8 +199,11 @@
         
         <div class="pt-4">
             <button 
+                id="billing-submit"
                 type="submit" 
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                class="w-full bg-blue-400 text-white py-2 px-6 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 cursor-not-allowed"
+                disabled
+            >
                 Continue to Payment
             </button>
         </div>
