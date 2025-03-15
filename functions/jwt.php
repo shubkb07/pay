@@ -25,6 +25,8 @@ function jwt_decode_token($token) {
     include_once INC . 'lib/php-jwt/src/Key.php';
     $key = 'secret';
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    // Convert the object into an associative array.
+    $decoded = json_decode(json_encode($decoded), true);
     return $decoded;
 }
 
