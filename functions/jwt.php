@@ -21,12 +21,12 @@ function jwt_create_token($data) {
 //  * JWT Decode Token.
 //  */
 function jwt_decode_token($token) {
-    // include_once INC . 'lib/php-jwt/src/JWT.php';
-    // include_once INC . 'lib/php-jwt/src/Key.php';
+    include_once INC . 'lib/php-jwt/src/JWT.php';
+    include_once INC . 'lib/php-jwt/src/Key.php';
     $key = 'secret';
-    // $header = new StdClass();
-    // $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
-    // return [$header, $decoded];
+    $header = new StdClass();
+    $decoded = JWT::decode($jwt, new Key($key, 'HS256'), $header);
+    return [$header, $decoded];
 }
 
 echo '<br>';
