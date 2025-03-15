@@ -16,73 +16,104 @@ document.addEventListener('DOMContentLoaded', () => {
             billing: document.getElementById('billing-form')
         },
         
-        // Country and state data for dropdowns
-        countries: [
-            { code: 'US', name: 'United States' },
-            { code: 'CA', name: 'Canada' },
-            { code: 'UK', name: 'United Kingdom' },
-            { code: 'IN', name: 'India' },
-            { code: 'AU', name: 'Australia' },
-            { code: 'DE', name: 'Germany' },
-            { code: 'FR', name: 'France' },
-            { code: 'JP', name: 'Japan' }
-        ],
-        
-        states: {
-            'US': [
-                { code: 'AL', name: 'Alabama' },
-                { code: 'AK', name: 'Alaska' },
-                { code: 'AZ', name: 'Arizona' },
-                { code: 'AR', name: 'Arkansas' },
-                { code: 'CA', name: 'California' },
-                { code: 'CO', name: 'Colorado' },
-                { code: 'CT', name: 'Connecticut' },
-                { code: 'DE', name: 'Delaware' },
-                { code: 'FL', name: 'Florida' },
-                { code: 'GA', name: 'Georgia' }
-                // Add more as needed
-            ],
-            'CA': [
-                { code: 'AB', name: 'Alberta' },
-                { code: 'BC', name: 'British Columbia' },
-                { code: 'MB', name: 'Manitoba' },
-                { code: 'NB', name: 'New Brunswick' },
-                { code: 'NL', name: 'Newfoundland and Labrador' },
-                { code: 'NS', name: 'Nova Scotia' },
-                { code: 'ON', name: 'Ontario' },
-                { code: 'PE', name: 'Prince Edward Island' },
-                { code: 'QC', name: 'Quebec' },
-                { code: 'SK', name: 'Saskatchewan' }
-            ],
-            'IN': [
-                { code: 'AP', name: 'Andhra Pradesh' },
-                { code: 'AR', name: 'Arunachal Pradesh' },
-                { code: 'AS', name: 'Assam' },
-                { code: 'BR', name: 'Bihar' },
-                { code: 'CT', name: 'Chhattisgarh' },
-                { code: 'GA', name: 'Goa' },
-                { code: 'GJ', name: 'Gujarat' },
-                { code: 'HR', name: 'Haryana' },
-                { code: 'HP', name: 'Himachal Pradesh' },
-                { code: 'JH', name: 'Jharkhand' }
-                // Add more as needed
-            ]
-        },
+        // Geo data
+        geoData: null,
         
         init() {
             console.log('Initializing create page:', this.data.page);
             
-            // Initialize the appropriate page based on data
-            switch (this.data.page) {
-                case 'email':
-                    this.initEmailPage();
-                    break;
-                case 'coupon':
-                    this.initCouponPage();
-                    break;
-                case 'billing':
-                    this.initBillingPage();
-                    break;
+            // Load geo data first (needed for billing page)
+            this.loadGeoData().then(() => {
+                // Initialize the appropriate page based on data
+                switch (this.data.page) {
+                    case 'email':
+                        this.initEmailPage();
+                        break;
+                    case 'coupon':
+                        this.initCouponPage();
+                        break;
+                    case 'billing':
+                        this.initBillingPage();
+                        break;
+                }
+            });
+        },
+        
+        // Load geographic data from JSON file
+        async loadGeoData() {
+            try {
+                const response = await fetch('/pay/assets/json/geo.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load geographic data');
+                }
+                this.geoData = await response.json();
+                console.log('Geo data loaded successfully');
+            } catch (error) {
+                console.error('Error loading geo data:', error);
+                // Fallback to minimal data if couldn't load
+                this.geoData = {
+                    "US": { "id": "233", "name": "United States", "phonecode": "1", "emojiU": ["U+1F1FA", "U+1F1F8"] },
+                    "GB": { "id": "232", "name": "United Kingdom", "phonecode": "44", "emojiU": ["U+1F1EC", "U+1F1E7"] },
+                    "IN": { "id": "101", "name": "India", "phonecode": "91", "emojiU": ["U+1F1EE", "U+1F1F3"] }
+                };
+            }
+        },
+        
+        // Get countries list from geo data
+        getCountriesFromGeoData() {
+            if (!this.geoData) return [];
+            
+            return Object.entries(this.geoData).map(([code, data]) => {
+                return {
+                    code: code,
+                    name: data.name,
+                    value: code,
+                    emojiU: data.emojiU || []
+                };
+            }).sort((a, b) => a.name.localeCompare(b.name));
+        },
+        
+        // Get states list for a country from geo data
+        getStatesFromGeoData(countryCode) {
+            if (!this.geoData || !countryCode || !this.geoData[countryCode] || !this.geoData[countryCode].states) {
+                return [];
+            }
+            
+            return this.geoData[countryCode].states.map((state, index) => {
+                return {
+                    code: index.toString(),
+                    name: state,
+                    value: state
+                };
+            }).sort((a, b) => a.name.localeCompare(b.name));
+        },
+        
+        // Get phone codes from geo data
+        getPhoneCodesFromGeoData() {
+            if (!this.geoData) return [];
+            
+            return Object.entries(this.geoData).map(([code, data]) => {
+                const emoji = this.emojiUToString(data.emojiU || []);
+                return {
+                    code: data.phonecode,
+                    name: `${emoji} ${data.name} (+${data.phonecode})`,
+                    value: data.phonecode,
+                    countryCode: code,
+                    countryName: data.name,
+                    emojiU: data.emojiU || []
+                };
+            }).sort((a, b) => a.countryName.localeCompare(b.countryName));
+        },
+        
+        // Convert emoji Unicode points to string
+        emojiUToString(emojiU) {
+            if (!emojiU || emojiU.length === 0) return '';
+            
+            try {
+                return emojiU.map(u => String.fromCodePoint(parseInt(u.replace('U+', ''), 16))).join('');
+            } catch (e) {
+                console.error('Error converting emoji unicode:', e);
+                return '';
             }
         },
         
@@ -132,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const couponError = document.getElementById('coupon-error');
             const couponSuccess = document.getElementById('coupon-success');
             const skipButton = document.getElementById('skip-coupon');
+            const checkButton = document.getElementById('check-coupon');
             
             // Skip button functionality - just submit form without coupon
             if (skipButton) {
@@ -141,10 +173,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
             
+            // Check button functionality - verify coupon without submitting
+            if (checkButton) {
+                checkButton.addEventListener('click', () => {
+                    const coupon = couponInput.value.trim();
+                    
+                    if (!coupon) {
+                        couponError.textContent = 'Please enter a coupon code to check.';
+                        couponError.classList.remove('hidden');
+                        couponSuccess.classList.add('hidden');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    checkButton.disabled = true;
+                    checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+                    
+                    // Verify the coupon code with the API
+                    this.checkCoupon(coupon)
+                        .then(data => {
+                            checkButton.disabled = false;
+                            checkButton.textContent = 'Check';
+                            
+                            if (data.verify) {
+                                couponSuccess.textContent = 'Valid coupon! You can apply it to your order.';
+                                couponSuccess.classList.remove('hidden');
+                                couponError.classList.add('hidden');
+                            } else {
+                                couponError.textContent = data.reason || 'This coupon code is not valid.';
+                                couponError.classList.remove('hidden');
+                                couponSuccess.classList.add('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            checkButton.disabled = false;
+                            checkButton.textContent = 'Check';
+                            couponError.textContent = 'Error checking coupon. Please try again.';
+                            couponError.classList.remove('hidden');
+                            couponSuccess.classList.add('hidden');
+                        });
+                });
+            }
+            
+            // Form submission - apply the coupon
             this.forms.coupon.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // Validate coupon
                 const coupon = couponInput.value.trim();
                 
                 // If empty, just submit (same as skip)
@@ -153,21 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
-                // Here you would normally check the coupon validity via AJAX
-                // Mock validation for demonstration
-                this.validateCoupon(coupon)
-                    .then(result => {
-                        if (result.valid) {
-                            couponSuccess.textContent = 'Coupon applied: ' + result.message;
-                            couponSuccess.classList.remove('hidden');
-                            couponError.classList.add('hidden');
-                            
-                            // Submit form after a brief delay to show success message
-                            setTimeout(() => {
-                                this.forms.coupon.submit();
-                            }, 1500);
+                // Verify coupon before submitting
+                this.checkCoupon(coupon)
+                    .then(data => {
+                        if (data.verify) {
+                            // Valid coupon, submit the form
+                            this.forms.coupon.submit();
                         } else {
-                            couponError.textContent = 'Invalid coupon: ' + result.message;
+                            couponError.textContent = data.reason || 'This coupon is not valid.';
                             couponError.classList.remove('hidden');
                             couponSuccess.classList.add('hidden');
                         }
@@ -179,47 +246,64 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
             });
             
-            // Clear error message when user types
+            // Clear error/success messages when user types
             couponInput.addEventListener('input', () => {
                 couponError.classList.add('hidden');
                 couponSuccess.classList.add('hidden');
             });
         },
         
-        // Mock coupon validation - in real implementation, this would make an AJAX call
-        validateCoupon(code) {
-            return new Promise((resolve, reject) => {
-                // Simulate API call delay
-                setTimeout(() => {
-                    // Simple mock validation logic
-                    if (!code || code.length < 3) {
-                        resolve({ valid: false, message: 'Coupon code is too short' });
-                    } else if (code.toLowerCase() === 'expired') {
-                        resolve({ valid: false, message: 'This coupon has expired' });
-                    } else if (code.toLowerCase() === 'invalid') {
-                        resolve({ valid: false, message: 'This coupon code is not valid' });
-                    } else {
-                        resolve({ valid: true, message: 'Discount applied' });
-                    }
-                }, 500);
-            });
+        // Check coupon with API
+        async checkCoupon(coupon) {
+            try {
+                const response = await fetch('/api/v1/coupon/check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ coupon })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error checking coupon:', error);
+                throw error;
+            }
         },
         
         // Billing page functionality
         initBillingPage() {
             if (!this.forms.billing) return;
             
-            // Initialize custom dropdowns
-            this.initCustomDropdown('country', this.countries);
-            this.initCustomDropdown('state', []); // Initially empty until country is selected
+            // Initialize filterable dropdowns
+            this.initFilterableDropdown('country', this.getCountriesFromGeoData());
+            this.initFilterableDropdown('phone-code', this.getPhoneCodesFromGeoData());
+            this.initFilterableDropdown('state', []); // Initially empty until country is selected
             
             // Set up country change event to update states
             const countryInput = document.getElementById('country');
+            const stateSearchInput = document.getElementById('state-search');
+            
             if (countryInput) {
                 countryInput.addEventListener('change', () => {
                     const countryCode = countryInput.value;
-                    const stateOptions = this.states[countryCode] || [];
-                    this.updateCustomDropdown('state', stateOptions);
+                    if (countryCode) {
+                        const stateOptions = this.getStatesFromGeoData(countryCode);
+                        this.updateFilterableDropdown('state', stateOptions);
+                        if (stateSearchInput) {
+                            stateSearchInput.disabled = false;
+                        }
+                    } else {
+                        this.updateFilterableDropdown('state', []);
+                        if (stateSearchInput) {
+                            stateSearchInput.disabled = true;
+                            stateSearchInput.value = '';
+                        }
+                    }
                 });
             }
             
@@ -232,11 +316,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Required fields to validate
                 const fieldsToValidate = [
+                    { id: 'name', message: 'Full name is required' },
                     { id: 'address1', message: 'Address is required' },
                     { id: 'city', message: 'City is required' },
                     { id: 'postal_code', message: 'Postal code is required' },
                     { id: 'country', message: 'Please select a country' },
                     { id: 'state', message: 'Please select a state/province' },
+                    { id: 'phonecode', message: 'Please select a phone code' },
                     { id: 'phone', message: 'Phone number is required' }
                 ];
                 
@@ -257,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Phone validation
                 const phoneInput = document.getElementById('phone');
-                if (phoneInput && !this.isValidPhone(phoneInput.value.trim())) {
+                if (phoneInput && phoneInput.value.trim() && !this.isValidPhone(phoneInput.value.trim())) {
                     this.showError('phone', 'Please enter a valid phone number');
                     isValid = false;
                 }
@@ -272,132 +358,127 @@ document.addEventListener('DOMContentLoaded', () => {
             const formInputs = this.forms.billing.querySelectorAll('input');
             formInputs.forEach(input => {
                 input.addEventListener('input', () => {
-                    const errorElement = document.getElementById(`${input.id}-error`);
+                    const errorId = input.id.replace('-search', '');
+                    const errorElement = document.getElementById(`${errorId}-error`);
                     if (errorElement) errorElement.classList.add('hidden');
                 });
             });
         },
         
-        // Initialize custom dropdown
-        initCustomDropdown(id, options) {
-            const button = document.getElementById(`${id}-button`);
+        // Initialize filterable dropdown
+        initFilterableDropdown(id, options) {
+            const searchInput = document.getElementById(`${id}-search`);
             const dropdown = document.getElementById(`${id}-dropdown`);
-            const hiddenInput = document.getElementById(id);
-            const selectedValue = button.querySelector(`.${id}-selected-value`);
+            const hiddenInput = document.getElementById(id.replace('-code', 'code')); // Handle phone-code case
             
-            if (!button || !dropdown || !hiddenInput) return;
+            if (!searchInput || !dropdown || !hiddenInput) {
+                console.error(`Missing elements for dropdown: ${id}`);
+                return;
+            }
             
-            // Populate dropdown options
-            this.updateCustomDropdown(id, options);
+            // Store options for filtering
+            searchInput.dataset.options = JSON.stringify(options);
             
-            // Toggle dropdown on button click
-            button.addEventListener('click', () => {
-                const isExpanded = button.getAttribute('aria-expanded') === 'true';
-                
-                // Toggle dropdown visibility
-                dropdown.classList.toggle('hidden');
-                button.setAttribute('aria-expanded', !isExpanded);
-                
-                // Add focus trap if opened
-                if (!isExpanded) {
-                    const firstItem = dropdown.querySelector('li');
-                    if (firstItem) firstItem.focus();
-                }
+            // Populate dropdown with options
+            this.updateFilterableDropdown(id, options);
+            
+            // Show dropdown on focus
+            searchInput.addEventListener('focus', () => {
+                dropdown.classList.remove('hidden');
             });
             
-            // Close dropdown when clicking outside
+            // Filter options as user types
+            searchInput.addEventListener('input', () => {
+                const value = searchInput.value.toLowerCase();
+                const allOptions = JSON.parse(searchInput.dataset.options);
+                
+                // Filter options based on search value
+                const filteredOptions = allOptions.filter(option => 
+                    option.name.toLowerCase().includes(value)
+                );
+                
+                this.updateFilterableDropdown(id, filteredOptions, false);
+                dropdown.classList.remove('hidden');
+            });
+            
+            // Handle click outside to close dropdown
             document.addEventListener('click', (e) => {
-                if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+                if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
                     dropdown.classList.add('hidden');
-                    button.setAttribute('aria-expanded', 'false');
                 }
             });
             
             // Handle keyboard navigation
-            dropdown.addEventListener('keydown', (e) => {
-                const items = dropdown.querySelectorAll('li');
-                const currentIndex = Array.from(items).findIndex(item => item === document.activeElement);
-                
-                switch (e.key) {
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        if (currentIndex < items.length - 1) {
-                            items[currentIndex + 1].focus();
-                        }
-                        break;
-                    case 'ArrowUp':
-                        e.preventDefault();
-                        if (currentIndex > 0) {
-                            items[currentIndex - 1].focus();
-                        } else {
-                            button.focus();
-                        }
-                        break;
-                    case 'Escape':
-                        e.preventDefault();
-                        dropdown.classList.add('hidden');
-                        button.setAttribute('aria-expanded', 'false');
-                        button.focus();
-                        break;
-                    case 'Enter':
-                    case ' ':
-                        e.preventDefault();
-                        document.activeElement.click();
-                        break;
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    dropdown.classList.remove('hidden');
+                    const firstItem = dropdown.querySelector('li:not(.hidden)');
+                    if (firstItem) firstItem.focus();
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                } else if (e.key === 'Enter' && !dropdown.classList.contains('hidden')) {
+                    e.preventDefault();
+                    const firstItem = dropdown.querySelector('li:not(.hidden)');
+                    if (firstItem) firstItem.click();
                 }
             });
         },
         
-        // Update custom dropdown options
-        updateCustomDropdown(id, options) {
+        // Update filterable dropdown with options
+        updateFilterableDropdown(id, options, updateDataset = true) {
+            const searchInput = document.getElementById(`${id}-search`);
             const dropdown = document.getElementById(`${id}-dropdown`);
-            const hiddenInput = document.getElementById(id);
-            const selectedValue = document.querySelector(`.${id}-selected-value`);
-            const button = document.getElementById(`${id}-button`);
+            const hiddenInput = document.getElementById(id.replace('-code', 'code'));
             
-            if (!dropdown || !hiddenInput || !selectedValue || !button) return;
+            if (!searchInput || !dropdown || !hiddenInput) return;
+            
+            // Update dataset if required
+            if (updateDataset) {
+                searchInput.dataset.options = JSON.stringify(options);
+            }
             
             // Clear existing options
             dropdown.innerHTML = '';
             
-            // Add new options
-            options.forEach(option => {
-                const item = document.createElement('li');
-                item.setAttribute('role', 'option');
-                item.setAttribute('tabindex', '-1');
-                item.className = 'px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
-                item.textContent = option.name;
-                item.setAttribute('data-value', option.code);
-                
-                // Handle option selection
-                item.addEventListener('click', () => {
-                    hiddenInput.value = option.code;
-                    selectedValue.textContent = option.name;
-                    dropdown.classList.add('hidden');
-                    button.setAttribute('aria-expanded', 'false');
-                    
-                    // Trigger change event
-                    const event = new Event('change', { bubbles: true });
-                    hiddenInput.dispatchEvent(event);
-                    
-                    // Focus back to button after selection
-                    button.focus();
-                });
-                
-                dropdown.appendChild(item);
-            });
-            
-            // Add empty message if no options
             if (options.length === 0) {
                 const emptyItem = document.createElement('li');
                 emptyItem.className = 'px-4 py-2 text-gray-500';
                 emptyItem.textContent = 'No options available';
                 dropdown.appendChild(emptyItem);
-                
-                // Reset hidden input
-                hiddenInput.value = '';
-                selectedValue.textContent = `Select ${id.charAt(0).toUpperCase() + id.slice(1)}`;
+                return;
             }
+            
+            // Add filtered options
+            options.forEach(option => {
+                const item = document.createElement('li');
+                item.setAttribute('role', 'option');
+                item.setAttribute('tabindex', '0');
+                item.className = 'px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
+                item.textContent = option.name;
+                item.dataset.value = option.value;
+                
+                // Handle selection
+                item.addEventListener('click', () => {
+                    hiddenInput.value = option.value;
+                    searchInput.value = option.name;
+                    dropdown.classList.add('hidden');
+                    
+                    // Trigger change event
+                    const event = new Event('change', { bubbles: true });
+                    hiddenInput.dispatchEvent(event);
+                });
+                
+                // Keyboard handling for each option
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        item.click();
+                    }
+                });
+                
+                dropdown.appendChild(item);
+            });
         },
         
         // Show error message for a field

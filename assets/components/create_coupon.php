@@ -10,14 +10,22 @@
             <label for="coupon" class="block text-sm font-medium text-gray-700 dark:text-gray-300 text-left">
                 Coupon Code (Optional)
             </label>
-            <input 
-                type="text" 
-                id="coupon" 
-                name="coupon" 
-                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
-                placeholder="Enter coupon code"
-                aria-describedby="coupon-error coupon-success"
-            >
+            <div class="flex space-x-2">
+                <input 
+                    type="text" 
+                    id="coupon" 
+                    name="coupon" 
+                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
+                    placeholder="Enter coupon code"
+                    aria-describedby="coupon-error coupon-success"
+                >
+                <button 
+                    type="button" 
+                    id="check-coupon" 
+                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+                    Check
+                </button>
+            </div>
             <p id="coupon-error" class="text-red-600 dark:text-red-400 text-sm hidden text-left"></p>
             <p id="coupon-success" class="text-green-600 dark:text-green-400 text-sm hidden text-left"></p>
         </div>

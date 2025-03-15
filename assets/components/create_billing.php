@@ -6,6 +6,23 @@
     </p>
     
     <form id="billing-form" method="post" action="" class="space-y-6">
+        <!-- Full Name -->
+        <div class="space-y-2">
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Full Name
+            </label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
+                placeholder="Enter your full name" 
+                required
+                aria-describedby="name-error"
+            >
+            <p id="name-error" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
+        </div>
+
         <!-- Address Line 1 -->
         <div class="space-y-2">
             <label for="address1" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -70,54 +87,26 @@
             </div>
         </div>
         
-        <!-- State/Province and Country -->
+        <!-- Country and State/Province -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Custom dropdown for state/province -->
-            <div class="space-y-2">
-                <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    State/Province
-                </label>
-                <div class="custom-select-container relative">
-                    <button 
-                        type="button" 
-                        id="state-button"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        aria-haspopup="listbox" 
-                        aria-expanded="false"
-                        aria-labelledby="state-label"
-                    >
-                        <span class="state-selected-value text-gray-700 dark:text-gray-200">Select State/Province</span>
-                        <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
-                    </button>
-                    <input type="hidden" name="state" id="state" value="">
-                    <ul 
-                        id="state-dropdown" 
-                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-auto" 
-                        role="listbox"
-                    >
-                        <!-- State options will be populated by JavaScript -->
-                    </ul>
-                </div>
-                <p id="state-error" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
-            </div>
-            
-            <!-- Custom dropdown for country -->
+            <!-- Custom dropdown for country with search -->
             <div class="space-y-2">
                 <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Country
                 </label>
                 <div class="custom-select-container relative">
-                    <button 
-                        type="button" 
-                        id="country-button"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        aria-haspopup="listbox" 
-                        aria-expanded="false"
-                        aria-labelledby="country-label"
-                    >
-                        <span class="country-selected-value text-gray-700 dark:text-gray-200">Select Country</span>
-                        <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
-                    </button>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="country-search" 
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white pr-10" 
+                            placeholder="Search country"
+                            autocomplete="off"
+                        >
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
+                        </span>
+                    </div>
                     <input type="hidden" name="country" id="country" value="">
                     <ul 
                         id="country-dropdown" 
@@ -129,22 +118,77 @@
                 </div>
                 <p id="country-error" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
             </div>
+            
+            <!-- Custom dropdown for state/province with search -->
+            <div class="space-y-2">
+                <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    State/Province
+                </label>
+                <div class="custom-select-container relative">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="state-search" 
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white pr-10" 
+                            placeholder="Search state/province"
+                            autocomplete="off"
+                            disabled
+                        >
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
+                        </span>
+                    </div>
+                    <input type="hidden" name="state" id="state" value="">
+                    <ul 
+                        id="state-dropdown" 
+                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-auto" 
+                        role="listbox"
+                    >
+                        <!-- State options will be populated by JavaScript -->
+                    </ul>
+                </div>
+                <p id="state-error" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
+            </div>
         </div>
         
-        <!-- Phone Number -->
+        <!-- Phone Number with Country Code -->
         <div class="space-y-2">
             <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Phone Number
             </label>
-            <input 
-                type="tel" 
-                id="phone" 
-                name="phone" 
-                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
-                placeholder="For delivery-related communications" 
-                required
-                aria-describedby="phone-error"
-            >
+            <div class="flex space-x-2">
+                <div class="w-2/5 relative">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="phone-code-search" 
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white pr-10" 
+                            placeholder="Search code"
+                            autocomplete="off"
+                        >
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
+                        </span>
+                    </div>
+                    <input type="hidden" name="phonecode" id="phonecode" value="">
+                    <ul 
+                        id="phone-code-dropdown" 
+                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-auto" 
+                        role="listbox"
+                    >
+                        <!-- Phone code options will be populated by JavaScript -->
+                    </ul>
+                </div>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    class="w-3/5 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
+                    placeholder="Enter phone number" 
+                    required
+                    aria-describedby="phone-error"
+                >
+            </div>
             <p id="phone-error" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
         </div>
         
