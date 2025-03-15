@@ -20,17 +20,20 @@ function jwt_create_token($data) {
 // /**
 //  * JWT Decode Token.
 //  */
-// function jwt_decode_token($token) {
-//     include_once INC . 'lib/firebase/php-jwt/src/JWT.php';
-//     include_once INC . 'lib/firebase/php-jwt/src/Key.php';
-//     $key = 'secret';
-//     $header = new StdClass();
-//     $decoded = JWT::decode($jwt, new Key($key, 'HS256'), $headers);
-//     return [$header, $decoded];
-// }
+function jwt_decode_token($token) {
+    include_once INC . 'lib/firebase/php-jwt/src/JWT.php';
+    include_once INC . 'lib/firebase/php-jwt/src/Key.php';
+    // $key = 'secret';
+    // $header = new StdClass();
+    // $decoded = JWT::decode($jwt, new Key($key, 'HS256'), $headers);
+    // return [$header, $decoded];
+}
 
+echo '<br>';
+echo 'random 1';
+echo '<br>';
 $text = 'Hello World!';
-// $token = jwt_create_token($text);
+$token = jwt_create_token($text);
 echo '<br>';
 // var_dump($token);
 echo '<br>';
