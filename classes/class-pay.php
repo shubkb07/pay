@@ -467,8 +467,8 @@ class Pay
                     'source'                   => 'API',
                     'currency'                 => $currency,
                     'expiryDate'               => $expiry_date,
-                    'successURL'               => 'https://pay.sh6.me/pay/success/' . $enc_transaction_id,
-                    'failureURL'               => 'https://pay.sh6.me/pay/failed/' . $enc_transaction_id,
+                    'successURL'               => get_option('home_url') . '/pay/success/' . $enc_transaction_id,
+                    'failureURL'               => get_option('home_url') . '/pay/failed/' . $enc_transaction_id,
                     'maxPaymentsAllowed'       => 1,
                    );
 
@@ -523,9 +523,10 @@ class Pay
 
         if (!empty($api_response['result'])) {
             $result = array(
-                       'invoiceNumber' => $api_response['result']['invoiceNumber'] ?? '',
-                       'paymentLink'   => $api_response['result']['paymentLink'] ?? '',
-                       'guid'          => $api_response['guid'] ?? '',
+                       'invoice_number' => $api_response['result']['invoiceNumber'] ?? '',
+                       'payment_link'   => $api_response['result']['paymentLink'] ?? '',
+                       'guid'           => $api_response['guid'] ?? '',
+                       'expiry_date'    => $expiry_date,
                       );
         }
 
@@ -729,9 +730,12 @@ class Pay
          'guid'          => $api_response['guid'] ?? '',
         );
         return array(
-                'transaction_id'  => $transaction_id,
-                'shareable_link'  => $shareable_link,
-                'invoice_number'  => $invoice_number,
+                'product'        => $product,
+                'transaction_id' => $transaction_id,
+                'shareable_link' => get_option('home_url')
+                                    . '/pay/p/'
+                                    . $this->encrypt_decrypt('encrypt', $payment_link['invoice_number']),
+                'invoice_number' => $payment_link['invoice_number'],
                );
     }
 }
