@@ -42,19 +42,19 @@ if (isset($options['coupon']) && isset($options['email'])) {
     }
 }
 
-// Set the page title based on current step
+// Set the page title based on current step.
 $page_titles = [
-    'email' => 'Enter Email - Pay',
-    'coupon' => 'Apply Coupon - Pay',
-    'billing' => 'Billing Details - Pay',
-    'blocked' => 'Email Blocked - Pay'
-];
+                'email'   => 'Enter Email - Pay',
+                'coupon'  => 'Apply Coupon - Pay',
+                'billing' => 'Billing Details - Pay',
+                'blocked' => 'Email Blocked - Pay',
+               ];
 
-// Create page data for JavaScript
+// Create page data for JavaScript.
 $page_data = [
-    'page' => $page,
-    'options' => $options
-];
+              'page'    => $page,
+              'options' => $options,
+             ];
 
 ?>
 <!DOCTYPE html>
@@ -101,10 +101,10 @@ $page_data = [
     <main id="main-content" class="flex-grow flex items-center justify-center py-12" tabindex="-1">
         <div class="container mx-auto px-8 md:px-12">
             <div class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8" role="region">
-                <?php 
-                // Check if the email is blocked - this logic would be implemented later
-                $email_blocked = false; // This will be replaced with actual logic
-                
+                <?php
+                // Check if the email is blocked - this logic would be implemented later.
+                $email_blocked = false; // This will be replaced with actual logic.
+
                 if ($page === 'email' && $email_blocked) {
                     include_once ASSETS . 'components/create_blocked_email.php';
                 } elseif ($page === 'email') {

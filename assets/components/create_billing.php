@@ -110,7 +110,7 @@
                     <input type="hidden" name="country" id="country" value="">
                     <ul 
                         id="country-dropdown" 
-                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-36 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-y-auto" 
+                        class="absolute z-10 w-full u-30 mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-36 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-y-auto" 
                         role="listbox"
                     >
                         <!-- Country options will be populated by JavaScript -->
