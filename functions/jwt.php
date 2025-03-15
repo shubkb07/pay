@@ -6,7 +6,18 @@
  * @author   Shubham Kumar Bansal <
  */
 
-use Firebase\JWT\{JWT, key};
+use Firebase\JWT\{JWT, key, BeforeValidException, ExpiredException, SignatureInvalidException};
+
+/**
+ * Include all necessary JWT files.
+ */
+function jwt_include_files() {
+    include_once INC . 'lib/php-jwt/src/JWT.php';
+    include_once INC . 'lib/php-jwt/src/Key.php';
+    include_once INC . 'lib/php-jwt/src/BeforeValidException.php';
+    include_once INC . 'lib/php-jwt/src/ExpiredException.php';
+    include_once INC . 'lib/php-jwt/src/SignatureInvalidException.php';
+}
 
 /**
  * JWT Create Token.
@@ -17,7 +28,7 @@ use Firebase\JWT\{JWT, key};
  */
 function jwt_create_token($data) {
     try {
-        include_once INC . 'lib/php-jwt/src/JWT.php';
+        jwt_include_files();
         $key = 'secret';
         return JWT::encode($data, $key, 'HS256');
     } catch (Exception $e) {
@@ -35,10 +46,18 @@ function jwt_create_token($data) {
  */
 function jwt_decode_token($token) {
     try {
-        include_once INC . 'lib/php-jwt/src/JWT.php';
-        include_once INC . 'lib/php-jwt/src/Key.php';
+        jwt_include_files();
         $key = 'secret';
         return json_decode(json_encode(JWT::decode($token, new Key($key, 'HS256'))), true);
+    } catch (SignatureInvalidException $e) {
+        error_log('JWT Invalid Signature: ' . $e->getMessage());
+        return false;
+    } catch (BeforeValidException $e) {
+        error_log('JWT Not Valid Yet: ' . $e->getMessage());
+        return false;
+    } catch (ExpiredException $e) {
+        error_log('JWT Expired: ' . $e->getMessage());
+        return false;
     } catch (Exception $e) {
         error_log('JWT Decode Error: ' . $e->getMessage());
         return false;
@@ -55,8 +74,7 @@ function jwt_decode_token($token) {
  */
 function jwt_verify_token($token, $data) {
     try {
-        include_once INC . 'lib/php-jwt/src/JWT.php';
-        include_once INC . 'lib/php-jwt/src/Key.php';
+        jwt_include_files();
         $decoded = jwt_decode_token($token);
 
         if ($decoded === false) {
