@@ -56,6 +56,8 @@ if (count($path) > 0) {
                 include_once ASSETS . 'pages/success.php';
             } elseif ($path[1] === 'failed') {
                 include_once ASSETS . 'pages/failed.php';
+            } elseif ($path[1] === 'c') {
+                include_once ASSETS . 'pages/create.php';
             } elseif ($path[1] === 'p') {
                 if (isset($_GET['qr'])) {
                     // QR to current page without search params.
@@ -84,8 +86,6 @@ if (count($path) > 0) {
             echo '<pre>';
             print_r(create_tables());
             echo '</pre>';
-        } elseif ($path[0] === 'j') {
-            include_once INC . 'functions/jwt.php';
         } elseif ($path[0] === 'p') {
             $user = array(
                      'name'  => 'Shubham Kumar Bansal',
