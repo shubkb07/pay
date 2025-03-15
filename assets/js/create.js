@@ -42,7 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Load geographic data from JSON file
         async loadGeoData() {
             try {
-                const response = await fetch('/pay/assets/json/geo.json');
+
+				// Get geo data from the API
+				const geoJsonLocation = document.getElementById('pay-geo-json').value;
+                const response = await fetch(geoJsonLocation);
                 if (!response.ok) {
                     throw new Error('Failed to load geographic data');
                 }

@@ -93,6 +93,7 @@ $page_data = [
     <?php echo generate_cdata('pageData', $page_data); ?>
 </head>
 <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition duration-300 flex flex-col min-h-screen">
+    <input id="pay-geo-json" value="<?php echo ASSETS_URL . 'json/geo.json' ?>" type="hidden">
     <!-- Skip link for keyboard navigation -->
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
     
