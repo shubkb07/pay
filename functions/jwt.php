@@ -17,20 +17,19 @@ function jwt_create_token($data) {
     return JWT::encode($data, $key, 'HS256');
 }
 
-// /**
-//  * JWT Decode Token.
-//  */
+/**
+ * JWT Decode Token.
+ */
 function jwt_decode_token($token) {
     include_once INC . 'lib/php-jwt/src/JWT.php';
     include_once INC . 'lib/php-jwt/src/Key.php';
     $key = 'secret';
-    $header = new StdClass();
-    $decoded = JWT::decode($token, new Key($key, 'HS256'), $header);
-    return [$header, $decoded];
+    $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    return $decoded;
 }
 
 echo '<br>';
-echo 'random 3';
+echo 'random 4';
 echo '<br>';
 $text = array('name' => 'Some Name', 'email' => 'example@example.com');
 $token = jwt_create_token($text);
