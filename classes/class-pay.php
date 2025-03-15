@@ -620,7 +620,7 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $expire_in = 3600, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
+    public function create_pay_link($user, $address, $product_id, $expire_in = null, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
 
         global $db;
 
@@ -655,11 +655,6 @@ class Pay
             return null;
         }
 
-        // Expire in must be integer and more than 300 seconds.
-        if (!is_numeric($expire_in) || $expire_in < 300) {
-            return null;
-        }
-
         // Get product details from database.
         global $db;
         if (!isset($db) || !($db instanceof \Pay\Db)) {
@@ -679,6 +674,14 @@ class Pay
         } catch (\Exception $e) {
             error_log('Error retrieving product details: ' . $e->getMessage());
             return null;
+        }
+
+        // Expire in must be integer and more than 300 seconds.
+        if (!is_numeric($expire_in) || $expire_in < 300) {
+            $expire_in = $product['expire_in'];
+            if (empty($expire_in) || !is_numeric($expire_in) || $expire_in < 300) {
+                $expire_in = 3600;
+            }
         }
 
         $sub_amount = $product['price'];
