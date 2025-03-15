@@ -23,8 +23,9 @@ $countries_result = $mysqli->query($countries_query);
 
 if ($countries_result) {
     while ($country = $countries_result->fetch_assoc()) {
+        $country['emojiU'] = explode(' ', $country['emojiU']); // Explode emojiU string into an array
         $countries[$country['iso2']] = $country;
-        $countries[$country['iso2']]['states'] = []; // Initialize states array
+        $countries[$country['iso2']]['states'] = [];
     }
     $countries_result->free_result();
 } else {
@@ -48,14 +49,12 @@ if ($states_result) {
 foreach ($states as $state) {
     foreach ($countries as $iso2 => $country) {
         if ($state['country_id'] == $country['id']) {
-            $countries[$iso2]['states'][] = ['name' => $state['name']];
+            $countries[$iso2]['states'][] = $state['name']; // Directly add state name to array
             break;
         }
     }
 }
 
-echo json_encode($countries, JSON_UNESCAPED_UNICODE); // Important for emojiU
+echo json_encode($countries, JSON_UNESCAPED_UNICODE);
 
 $mysqli->close();
-
-?>
