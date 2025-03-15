@@ -6,6 +6,7 @@
 
 // Decode Pay ID.
 $options = jwt_decode_token($pay_id);
+echo json_encode($options);
 
 // In options, product_id must be present and it must be a number, else 404.
 if (!isset($options['product_id']) || !is_numeric($options['product_id'])) {
