@@ -149,7 +149,13 @@ class Pay
 
         try {
             // Check if DB constants are defined.
-            if (!defined('DB_HOST') || !defined('DB_USER') || !defined('DB_PASS') || !defined('DB_NAME') || !defined('DB_PORT')) {
+            if (
+                !defined('DB_HOST')
+                || !defined('DB_USER')
+                || !defined('DB_PASS')
+                || !defined('DB_NAME')
+                || !defined('DB_PORT')
+            ) {
                 // Can't check database, return the generated ID.
                 return $txnid;
             }
@@ -429,7 +435,17 @@ class Pay
      *
      * @return array
      */
-    private function get_payment_link($transaction_id, $user, $address, $description, $currency, $sub_amount, $tax = 0, $discount = 0, $expire_in = 3600) {
+    private function get_payment_link(
+        $transaction_id,
+        $user,
+        $address,
+        $description,
+        $currency,
+        $sub_amount,
+        $tax = 0,
+        $discount = 0,
+        $expire_in = 3600
+    ) {
         $access_token = $this->get_bearer();
 
         print_r('Reaching here 2');
@@ -621,7 +637,16 @@ class Pay
     /**
      * Create Payment Link.
      */
-    public function create_pay_link($user, $address, $product_id, $expire_in = null, $currency_in = '', $coupon = '', $tax_percentage = null, $transaction_id = null) {
+    public function create_pay_link(
+        $user,
+        $address,
+        $product_id,
+        $expire_in = null,
+        $currency_in = '',
+        $coupon = '',
+        $tax_percentage = null,
+        $transaction_id = null
+    ) {
 
         global $db;
 
@@ -734,8 +759,13 @@ class Pay
                 'transaction_id' => $transaction_id,
                 'shareable_link' => get_option('home_url')
                                     . '/pay/p/'
-                                    . $this->encrypt_decrypt('encrypt', $payment_link['invoice_number']),
+                                    . $this->encrypt_decrypt(
+                                        'encrypt',
+                                        $payment_link['invoice_number']
+                                    ),
                 'invoice_number' => $payment_link['invoice_number'],
+                'expiry_date'    => $payment_link['expiry_date'],
+                'payment_link'   => $payment_link['payment_link'],
                );
     }
 }

@@ -74,6 +74,8 @@ if (count($path) > 0) {
             echo '<pre>';
             print_r(create_tables());
             echo '</pre>';
+        } elseif ($path[0] === 'j') {
+            include_once INC . 'functions/jwt.php';
         } elseif ($path[0] === 'p') {
             $user = array(
                      'name'  => 'Shubham Kumar Bansal',
