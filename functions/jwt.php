@@ -13,12 +13,17 @@ use Firebase\JWT\{JWT, key};
  *
  * @param array $data Data to encode.
  *
- * @return string Encoded token.
+ * @return string|false Encoded token or false on error.
  */
 function jwt_create_token($data) {
-    include_once INC . 'lib/php-jwt/src/JWT.php';
-    $key = 'secret';
-    return JWT::encode($data, $key, 'HS256');
+    try {
+        include_once INC . 'lib/php-jwt/src/JWT.php';
+        $key = 'secret';
+        return JWT::encode($data, $key, 'HS256');
+    } catch (Exception $e) {
+        error_log('JWT Create Error: ' . $e->getMessage());
+        return false;
+    }
 }
 
 /**
@@ -26,13 +31,18 @@ function jwt_create_token($data) {
  *
  * @param string $token Token to decode.
  *
- * @return array Decoded data.
+ * @return array|false Decoded data or false on error.
  */
 function jwt_decode_token($token) {
-    include_once INC . 'lib/php-jwt/src/JWT.php';
-    include_once INC . 'lib/php-jwt/src/Key.php';
-    $key = 'secret';
-    return json_decode(json_encode(JWT::decode($token, new Key($key, 'HS256'))), true);
+    try {
+        include_once INC . 'lib/php-jwt/src/JWT.php';
+        include_once INC . 'lib/php-jwt/src/Key.php';
+        $key = 'secret';
+        return json_decode(json_encode(JWT::decode($token, new Key($key, 'HS256'))), true);
+    } catch (Exception $e) {
+        error_log('JWT Decode Error: ' . $e->getMessage());
+        return false;
+    }
 }
 
 /**
@@ -44,9 +54,19 @@ function jwt_decode_token($token) {
  * @return boolean Verification status.
  */
 function jwt_verify_token($token, $data) {
-    include_once INC . 'lib/php-jwt/src/JWT.php';
-    include_once INC . 'lib/php-jwt/src/Key.php';
-    $decoded = jwt_decode_token($token);
-    $diff = array_diff($decoded, $data);
-    return empty($diff);
+    try {
+        include_once INC . 'lib/php-jwt/src/JWT.php';
+        include_once INC . 'lib/php-jwt/src/Key.php';
+        $decoded = jwt_decode_token($token);
+
+        if ($decoded === false) {
+            return false;
+        }
+
+        $diff = array_diff($decoded, $data);
+        return empty($diff);
+    } catch (Exception $e) {
+        error_log('JWT Verify Error: ' . $e->getMessage());
+        return false;
+    }
 }
