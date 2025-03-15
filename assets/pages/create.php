@@ -20,9 +20,6 @@ if (isset($options['coupon']) && isset($options['email'])) {
 } elseif (!isset($options['coupon']) && isset($options['email'])) {
     // If only email key is set, then set $page = 'coupon'.
     $page = 'coupon';
-} else {
-    // If none of the keys are set, then set $page = 'email'.
-    $page = 'email';
 
     // If Get parameter 'coupon' is set, then set coupon in options.
     if (isset($_GET['coupon'])) {
@@ -32,15 +29,18 @@ if (isset($options['coupon']) && isset($options['email'])) {
         header('Location: /pay/c/' . $token);
         exit;
     }
-}
+} else {
+    // If none of the keys are set, then set $page = 'email'.
+    $page = 'email';
 
-// If Get parameter 'email' is set, then set email in options.
-if (isset($_GET['email'])) {
-    $options['email'] = $_GET['email'];
-    // Make JWT token with options and redirect to the same page with email in URL.
-    $token = jwt_create_token($options);
-    header('Location: /pay/c/' . $token);
-    exit;
+    // If Get parameter 'email' is set, then set email in options.
+    if (isset($_GET['email'])) {
+        $options['email'] = $_GET['email'];
+        // Make JWT token with options and redirect to the same page with email in URL.
+        $token = jwt_create_token($options);
+        header('Location: /pay/c/' . $token);
+        exit;
+    }
 }
 
 ?>
