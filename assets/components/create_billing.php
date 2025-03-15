@@ -110,7 +110,7 @@
                     <input type="hidden" name="country" id="country" value="">
                     <ul 
                         id="country-dropdown" 
-                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-auto" 
+                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-36 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-y-auto" 
                         role="listbox"
                     >
                         <!-- Country options will be populated by JavaScript -->
@@ -141,7 +141,7 @@
                     <input type="hidden" name="state" id="state" value="">
                     <ul 
                         id="state-dropdown" 
-                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-auto" 
+                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-36 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-y-auto" 
                         role="listbox"
                     >
                         <!-- State options will be populated by JavaScript -->
@@ -157,23 +157,23 @@
                 Phone Number
             </label>
             <div class="flex space-x-2">
-                <div class="w-2/5 relative">
+                <div class="w-1/4 relative">
                     <div class="relative">
                         <input 
                             type="text" 
                             id="phone-code-search" 
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white pr-10" 
-                            placeholder="Search code"
+                            class="w-full px-2 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white pr-6" 
+                            placeholder="+Code"
                             autocomplete="off"
                         >
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none">
                             <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
                         </span>
                     </div>
                     <input type="hidden" name="phonecode" id="phonecode" value="">
                     <ul 
                         id="phone-code-dropdown" 
-                        class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-auto" 
+                        class="absolute z-10 w-64 mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-36 rounded-md border border-gray-300 dark:border-gray-700 hidden overflow-y-auto" 
                         role="listbox"
                     >
                         <!-- Phone code options will be populated by JavaScript -->
@@ -183,7 +183,7 @@
                     type="tel" 
                     id="phone" 
                     name="phone" 
-                    class="w-3/5 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
+                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" 
                     placeholder="Enter phone number" 
                     required
                     aria-describedby="phone-error"

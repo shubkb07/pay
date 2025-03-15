@@ -379,6 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // Ensure dropdown has proper styling for scrollable content
+            dropdown.classList.add('max-h-36', 'overflow-y-auto');
+            
             // Store options for filtering
             searchInput.dataset.options = JSON.stringify(options);
             
@@ -464,7 +467,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Handle selection
                 item.addEventListener('click', () => {
                     hiddenInput.value = option.value;
-                    searchInput.value = option.name;
+                    
+                    // For phone code, only show the "+code" format after selection
+                    if (id === 'phone-code') {
+                        searchInput.value = `+${option.value}`;
+                    } else {
+                        searchInput.value = option.name;
+                    }
+                    
                     dropdown.classList.add('hidden');
                     
                     // Trigger change event
