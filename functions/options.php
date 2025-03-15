@@ -4,12 +4,14 @@
  * Options Functions.
  */
 
-// Initialize the global options array
+// Initialize the global options array.
 global $option;
 $option = [];
 
 /**
  * Fetch Options.
+ *
+ * Fetch options from database and store in global variable.
  */
 function fetch_options() {
     global $db, $option;
@@ -32,11 +34,15 @@ function fetch_options() {
     }
 }
 
-// Call the function to load options at initialization/
+// Call the function to load options at initialization.
 fetch_options();
 
 /**
  * Get Option.
+ *
+ * @param string $option_name Option Name.
+ *
+ * @return string|null Option Value.
  */
 function get_option($option_name) {
     global $db, $option;
@@ -61,8 +67,13 @@ function get_option($option_name) {
 
 /**
  * Update Option.
+ *
+ * @param string $option_name  Option Name.
+ * @param string $option_value Option Value.
+ * @param string $autoload     Autoload.
+ *
+ * @return boolean True if updated, false otherwise.
  */
-
 function update_option($option_name, $option_value, $autoload = 'yes') {
     global $db, $option;
 
@@ -101,8 +112,11 @@ function update_option($option_name, $option_value, $autoload = 'yes') {
 
 /**
  * Delete Option.
+ *
+ * @param string $option_name Option Name.
+ *
+ * @return boolean True if deleted, false otherwise.
  */
-
 function delete_option($option_name) {
     global $db, $option;
 

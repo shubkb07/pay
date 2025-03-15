@@ -34,6 +34,16 @@ if (count($path) > 0) {
                 } else {
                     echo $invalid_endpoint;
                 }
+            } elseif ($path[2] === 'jwt') {
+                if ($path[3] === 'create') {
+                    $body = json_decode(file_get_contents('php://input'), true);
+                    echo json_encode(array('token' => jwt_create_token($body['data'])));
+                } elseif ($path[3] === 'verify') {
+                    $body = json_decode(file_get_contents('php://input'), true);
+                    echo json_encode(array('verify' => jwt_verify_token($body['token'], $body['data'])));
+                } else {
+                    echo $invalid_endpoint;
+                }
             } else {
                 echo $invalid_endpoint;
             }
