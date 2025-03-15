@@ -30,7 +30,7 @@ function jwt_decode_token($token) {
 }
 
 echo '<br>';
-echo 'random 2';
+echo 'random 3';
 echo '<br>';
 $text = 'Hello World!';
 $token = jwt_create_token($text);
