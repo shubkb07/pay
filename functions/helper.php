@@ -46,3 +46,21 @@ function qr_code($data) {
 
     return $image_data;
 }
+
+/**
+ * Generate CDATA for JavaScript
+ *
+ * @param string $name Variable name
+ * @param mixed $data Data to set on variable
+ * @return string JavaScript code with CDATA
+ */
+function generate_cdata($name, $data) {
+    $json_data = json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+    return <<<HTML
+    <script type="text/javascript">
+    //<![CDATA[
+    var {$name} = {$json_data};
+    //]]>
+    </script>
+    HTML;
+}
