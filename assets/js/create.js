@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Validate all required fields
                 if (this.validateBillingForm()) {
-                    // Submit form data via AJAX
+                    // Submit form data via traditional form submission
                     this.submitBillingForm();
                 }
             });
@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         
-        // Submit billing form via AJAX
+        // Submit billing form via traditional form submission
         submitBillingForm() {
             // Show loading state
             const submitButton = document.getElementById('billing-submit');
@@ -472,59 +472,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             }
             
-            // Gather form data
+            // Get the form element
+            const form = this.forms.billing;
+            if (!form) return;
+            
+            // Clear any previously created billing inputs
+            const existingInputs = form.querySelectorAll('input[name^="billing["]');
+            existingInputs.forEach(input => input.remove());
+            
+            // Create hidden inputs for the billing data structure
             const billingData = {
-                billing: {
-                    name: document.getElementById('name').value.trim(),
-                    address1: document.getElementById('address1').value.trim(),
-                    address2: document.getElementById('address2').value.trim(),
-                    city: document.getElementById('city').value.trim(),
-                    state: document.getElementById('state').value.trim(),
-                    postal_code: document.getElementById('postal_code').value.trim(),
-                    country: document.getElementById('country').value.trim(),
-                    phone: `+${document.getElementById('phonecode').value}${document.getElementById('phone').value.trim()}`
-                }
+                name: document.getElementById('name').value.trim(),
+                address1: document.getElementById('address1').value.trim(),
+                address2: document.getElementById('address2').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                postal_code: document.getElementById('postal_code').value.trim(),
+                country: document.getElementById('country').value.trim(),
+                phone: `+${document.getElementById('phonecode').value}${document.getElementById('phone').value.trim()}`
             };
             
-            // Send API request
-            fetch('/api/v1/billing', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(billingData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Redirect to the next page or show success
-                if (data.redirect) {
-                    window.location.href = data.redirect;
-                } else {
-                    // For testing purposes, just reload
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error submitting billing information:', error);
-                
-                // Show error message
-                const formError = document.getElementById('form-error');
-                if (formError) {
-                    formError.textContent = 'Error submitting your information. Please try again.';
-                    formError.classList.remove('hidden');
-                }
-                
-                // Reset button
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Continue to Payment';
-                }
+            // Add hidden inputs to structure the data as {billing: {...}}
+            Object.entries(billingData).forEach(([key, value]) => {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = `billing[${key}]`;
+                hiddenInput.value = value;
+                form.appendChild(hiddenInput);
             });
+            
+            // Set form action if needed (use current URL if not specified)
+            if (!form.action || form.action === window.location.href) {
+                form.action = window.location.href;
+            }
+            
+            // Submit the form traditionally
+            form.submit();
         },
         
         // Initialize filterable dropdown
