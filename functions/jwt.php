@@ -12,11 +12,15 @@ use Firebase\JWT\{JWT, key, BeforeValidException, ExpiredException, SignatureInv
  * Include all necessary JWT files.
  */
 function jwt_include_files() {
-    include_once INC . 'lib/php-jwt/src/JWT.php';
-    include_once INC . 'lib/php-jwt/src/Key.php';
-    include_once INC . 'lib/php-jwt/src/BeforeValidException.php';
-    include_once INC . 'lib/php-jwt/src/ExpiredException.php';
-    include_once INC . 'lib/php-jwt/src/SignatureInvalidException.php';
+    // Include interface files first.
+    @include_once INC . 'lib/php-jwt/src/JWTExceptionWithPayloadInterface.php';
+
+    // Then include the implementation classes.
+    @include_once INC . 'lib/php-jwt/src/JWT.php';
+    @include_once INC . 'lib/php-jwt/src/Key.php';
+    @include_once INC . 'lib/php-jwt/src/BeforeValidException.php';
+    @include_once INC . 'lib/php-jwt/src/ExpiredException.php';
+    @include_once INC . 'lib/php-jwt/src/SignatureInvalidException.php';
 }
 
 /**
@@ -48,7 +52,18 @@ function jwt_decode_token($token) {
     try {
         jwt_include_files();
         $key = 'secret';
+
+        // Basic token format validation to avoid passing malformed tokens to JWT::decode.
+        if (!$token || !is_string($token) || strpos($token, '.') === false) {
+            error_log('JWT Error: Invalid token format');
+            return false;
+        }
+
         return json_decode(json_encode(JWT::decode($token, new Key($key, 'HS256'))), true);
+    } catch (Error $e) {
+        // Catch PHP Errors (like class not found).
+        error_log('JWT PHP Error: ' . $e->getMessage());
+        return false;
     } catch (SignatureInvalidException $e) {
         error_log('JWT Invalid Signature: ' . $e->getMessage());
         return false;
