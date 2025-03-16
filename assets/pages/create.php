@@ -73,6 +73,8 @@ if (isset($_POST['email'])) {
     $page = 'email';
 }
 
+echo json_encode($product);
+
 // Handle coupon step.
 if ($page !== 'email') {
     if (isset($_POST['coupon'])) {
@@ -94,9 +96,11 @@ if ($page !== 'email') {
             unset($options['coupon']);
             redirect_with_options($options);
         }
-    } elseif ($product['can_percentage_coupon_apply'] === '1' ||
-              $product['can_price_coupon_apply'] === '1' ||
-              $product['can_free_trial_coupon_apply'] === '1') {
+    } elseif (
+        $product['can_percentage_coupon_apply'] === '1' ||
+        $product['can_price_coupon_apply'] === '1' ||
+        $product['can_free_trial_coupon_apply'] === '1'
+    ) {
         // Product allows coupons, show coupon page.
         $page = 'coupon';
     } else {
