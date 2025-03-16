@@ -97,9 +97,9 @@ if ($page !== 'email') {
             redirect_with_options($options);
         }
     } elseif (
-        $product['can_percentage_coupon_apply'] === '1' ||
-        $product['can_price_coupon_apply'] === '1' ||
-        $product['can_free_trial_coupon_apply'] === '1'
+        $product['can_percentage_coupon_apply'] === 1
+        || $product['can_price_coupon_apply'] === 1
+        || $product['can_free_trial_coupon_apply'] === 1
     ) {
         // Product allows coupons, show coupon page.
         $page = 'coupon';
