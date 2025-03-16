@@ -2,7 +2,7 @@
 
 /**
  * Create Payment Page.
- * 
+ *
  * Handles a multi-step payment flow:
  * 1. Email collection
  * 2. Optional coupon application
@@ -18,6 +18,8 @@ $page = '';
 // Decode payment ID from JWT token.
 $options = jwt_decode_token($pay_id);
 
+echo json_encode($_POST);
+echo '<br>';
 echo json_encode($options);
 
 // Validate product_id exists and is valid.
