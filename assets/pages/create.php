@@ -2,148 +2,134 @@
 
 /**
  * Create Payment Page.
+ * 
+ * Handles a multi-step payment flow:
+ * 1. Email collection
+ * 2. Optional coupon application
+ * 3. Billing details
  */
 
 use Pay\User;
 
-// Global Variables.
-global $user_exists, $is_blocked, $page;
+// Initialize global variables.
+global $user_exists, $is_blocked;
 $page = '';
 
-// Decode Pay ID.
+// Decode payment ID from JWT token.
 $options = jwt_decode_token($pay_id);
 
-// In options, product_id must be present and it must be a number, else 404.
+echo json_encode($options);
+
+// Validate product_id exists and is valid.
 if (!isset($options['product_id']) || !is_numeric($options['product_id'])) {
     include_once ASSETS . 'pages/404.php';
     exit;
-} else {
-    // If product_id is not present in the database, then 404.
-    $product = $pay->get_product($options['product_id']);
-    if (empty($product) || !isset($product['id']) || !is_array($product)) {
-        include_once ASSETS . 'pages/404.php';
-        exit;
-    }
+}
+
+// Verify product exists in database.
+$product = $pay->get_product($options['product_id']);
+if (empty($product) || !isset($product['id']) || !is_array($product)) {
+    include_once ASSETS . 'pages/404.php';
+    exit;
 }
 
 /**
- * Verify Email.
+ * Verify if email exists in the database and check account status.
+ *
+ * @param string $email Email to verify.
+ *
+ * @return void Updates global variables $user_exists and $is_blocked.
  */
 function verify_email($email) {
     global $user_exists, $is_blocked;
-    // Check If email present in the database.
     $user = new User($email);
-    if($user->exists) {
-        $user_exists = true;
-        // If user exists, then check if the account is blocked.
-        if ($user->is_blocked) {
-            $is_blocked = true;
-        }
-    } else {
-        $user_exists = false;
-    }
+    $user_exists = $user->exists;
+    $is_blocked = $user_exists && $user->is_blocked;
 }
 
-// Check for Email.
-if (isset($options['email'])) {
-    verify_email($options['email']);
-} elseif (isset($_POST['email'])) {
-    verify_email($_POST['email']);
+/**
+ * Redirect to the current page with updated options.
+ *
+ * @param array $options Options to encode in JWT token.
+ *
+ * @return void Exits after redirect
+ */
+function redirect_with_options($options) {
+    header('Location: /pay/c/' . jwt_create_token($options));
+    exit;
+}
+
+// Handle email step
+if (isset($_POST['email'])) {
+    // Process submitted email.
     $options['email'] = $_POST['email'];
-    // Make JWT token with options and redirect to the same page with email in URL.
-    $token = jwt_create_token($options);
-    header('Location: /pay/c/' . $token);
-    exit;
+    verify_email($_POST['email']);
+    redirect_with_options($options);
+} elseif (isset($options['email'])) {
+    // Email already in options, verify it.
+    verify_email($options['email']);
 } else {
-    // If email is not set, then set $page = 'email'.
+    // No email provided yet, show email page.
     $page = 'email';
 }
 
-// Check for Coupon.
-if (isset($options['coupon'])) {
-    // If email is empty, remove coupon from options.
-    if (empty($options['email'])) {
-        unset($options['coupon']);
-        header('Location: /pay/c/' . jwt_create_token($options));
-        exit;
-    }
-    // If coupon is empty, then it is valid, else check.
-    if (!empty($options['coupon'])) {
-        $coupon = $pay->can_coupon_be_applied($options['email'], $options['coupon'], $options['product_id']);
-        if (!$coupon) {
-            unset($options['coupon']);
-            header('Location: /pay/c/' . jwt_create_token($options));
-            exit;
-        }
-    }
-} elseif (isset($_POST['coupon'])) {
-    $options['coupon'] = $_POST['coupon'];
-    // Make JWT token with options and redirect to the same page with coupon in URL.
-    $token = jwt_create_token($options);
-    header('Location: /pay/c/' . $token);
-    exit;
-} else {
-    // If page is not email, then check for coupon.
-    if ($page !== 'email') {
-        // Check, If product allows coupon.
-        if ($product['can_percentage_coupon_apply'] === '1' || $product['can_price_coupon_apply'] === '1' || $product['can_free_trial_coupon_apply'] === '1') {
-            // If coupon is not set, then set $page = 'coupon'.
-            $page = 'coupon';
-        } else {
-            // Set Empty Coupon, and redirect.
-            $options['coupon'] = '';
-            header('Location: /pay/c/' . jwt_create_token($options));
-            exit;
-        }
-    }
-}
-
-if ($page !== 'email' && $page !== 'coupon') {
-    $page = 'billing';
-}
-
-if (isset($options['coupon']) && isset($options['email'])) {
-    // If coupon and email key is set, then set $page = 'billing'.
-    $page = 'billing';
-} elseif (!isset($options['coupon']) && isset($options['email'])) {
-    // If only email key is set, then set $page = 'coupon'.
-    $page = 'coupon';
-
-    // If POST parameter 'coupon' is set, then set coupon in options.
+// Handle coupon step.
+if ($page !== 'email') {
     if (isset($_POST['coupon'])) {
+        // Process submitted coupon.
         $options['coupon'] = $_POST['coupon'];
-        // Make JWT token with options and redirect to the same page with coupon in URL.
-        $token = jwt_create_token($options);
-        header('Location: /pay/c/' . $token);
-        exit;
-    }
-} else {
-    // If none of the keys are set, then set $page = 'email'.
-    $page = 'email';
-
-    // If POST parameter 'email' is set, then set email in options.
-    if (isset($_POST['email'])) {
-        $options['email'] = $_POST['email'];
-        // Make JWT token with options and redirect to the same page with email in URL.
-        $token = jwt_create_token($options);
-        header('Location: /pay/c/' . $token);
-        exit;
+        redirect_with_options($options);
+    } elseif (isset($options['coupon'])) {
+        // Coupon already in options, validate it.
+        if (!empty($options['email']) && !empty($options['coupon'])) {
+            // Validate coupon against product and email.
+            $coupon = $pay->can_coupon_be_applied($options['email'], $options['coupon'], $options['product_id']);
+            if (!$coupon) {
+                // Invalid coupon, remove it.
+                unset($options['coupon']);
+                redirect_with_options($options);
+            }
+        } elseif (empty($options['email'])) {
+            // Email missing, remove coupon and redirect.
+            unset($options['coupon']);
+            redirect_with_options($options);
+        }
+    } elseif ($product['can_percentage_coupon_apply'] === '1' ||
+              $product['can_price_coupon_apply'] === '1' ||
+              $product['can_free_trial_coupon_apply'] === '1') {
+        // Product allows coupons, show coupon page.
+        $page = 'coupon';
+    } else {
+        // Product doesn't allow coupons, skip to billing.
+        $options['coupon'] = '';
+        redirect_with_options($options);
     }
 }
 
-// Set the page title based on current step.
-$page_titles = [
-                'email'   => 'Enter Email - Pay',
-                'coupon'  => 'Apply Coupon - Pay',
-                'billing' => 'Billing Details - Pay',
-                'blocked' => 'Email Blocked - Pay',
-               ];
+// Determine current page based on available data.
+if ($page === '') {
+    if (isset($options['email']) && isset($options['coupon'])) {
+        $page = 'billing';
+    } elseif (isset($options['email'])) {
+        $page = 'coupon';
+    } else {
+        $page = 'email';
+    }
+}
 
-// Create page data for JavaScript.
+// Set the page title based on current step
+$page_titles = [
+    'email'   => 'Enter Email - Pay',
+    'coupon'  => 'Apply Coupon - Pay',
+    'billing' => 'Billing Details - Pay',
+    'blocked' => 'Email Blocked - Pay',
+];
+
+// Create page data for JavaScript
 $page_data = [
-              'page'    => $page,
-              'options' => $options,
-             ];
+    'page'    => $page,
+    'options' => $options,
+];
 
 ?>
 <!DOCTYPE html>
