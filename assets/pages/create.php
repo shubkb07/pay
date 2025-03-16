@@ -37,7 +37,7 @@ function verify_email($email) {
 }
 
 if (isset($_POST['email'])) {
-    verify_email($_POST['email']);
+    verify_email($options['email']);
 }
 
 if (isset($options['coupon']) && isset($options['email'])) {
