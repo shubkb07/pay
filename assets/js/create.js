@@ -342,6 +342,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Initialize state dropdown if needed
             this.initFilterableDropdown('state', []);
             
+            // Add change event listener to state input
+            if (stateInput) {
+                stateInput.addEventListener('change', () => {
+                    this.updateSubmitButtonState();
+                });
+            }
+            
             // Form validation
             this.forms.billing.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -364,7 +371,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Update button state
                     this.updateSubmitButtonState();
                 });
+                
+                // Also add change event to update button state
+                input.addEventListener('change', () => {
+                    this.updateSubmitButtonState();
+                });
             });
+            
+            // Initial button state check
+            this.updateSubmitButtonState();
         },
         
         // Validate billing form
@@ -373,13 +388,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Required fields to validate
             const fieldsToValidate = [
-                { id: 'name', message: 'Full name is required' },
-                { id: 'address1', message: 'Address is required' },
-                { id: 'city', message: 'City is required' },
-                { id: 'postal_code', message: 'Postal code is required' },
+                { id: 'name', message: 'Full name is required', validator: this.isValidName.bind(this) },
+                { id: 'address1', message: 'Address is required', validator: this.isValidAddress.bind(this) },
+                { id: 'city', message: 'City is required', validator: this.isValidCity.bind(this) },
+                { id: 'postal_code', message: 'Postal code is required', validator: this.isValidPostalCode.bind(this) },
                 { id: 'country', message: 'Please select a country' },
                 { id: 'phonecode', message: 'Please select a phone code' },
-                { id: 'phone', message: 'Phone number is required' }
+                { id: 'phone', message: 'Phone number is required', validator: this.isValidPhone.bind(this) }
             ];
             
             // Clear all previous errors
@@ -391,8 +406,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check each field
             fieldsToValidate.forEach(field => {
                 const inputElement = document.getElementById(field.id);
-                if (!inputElement || !inputElement.value.trim()) {
+                const value = inputElement?.value.trim() || '';
+                
+                // Check if empty first
+                if (!value) {
                     this.showError(field.id, field.message);
+                    isValid = false;
+                }
+                // If not empty and has validator, check format
+                else if (field.validator && !field.validator(value)) {
+                    this.showError(field.id, `Please enter a valid ${field.id.replace('_', ' ')}`);
                     isValid = false;
                 }
             });
@@ -409,14 +432,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            // Phone validation
-            const phoneInput = document.getElementById('phone');
-            if (phoneInput && phoneInput.value.trim() && !this.isValidPhone(phoneInput.value.trim())) {
-                this.showError('phone', 'Please enter a valid phone number');
-                isValid = false;
-            }
-            
             return isValid;
+        },
+        
+        // Add validation methods for different fields
+        isValidName(name) {
+            return name.length >= 2 && /^[a-zA-Z\s\-'\.]+$/.test(name);
+        },
+        
+        isValidAddress(address) {
+            return address.length >= 5;
+        },
+        
+        isValidCity(city) {
+            return city.length >= 2 && /^[a-zA-Z\s\-'\.]+$/.test(city);
+        },
+        
+        isValidPostalCode(code) {
+            // Basic postal code validation - alphanumeric and at least 3 chars
+            return code.length >= 3 && /^[a-zA-Z0-9\s\-]+$/.test(code);
         },
         
         // Update submit button state based on form validation
@@ -461,6 +495,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
                 submitButton.classList.add('bg-blue-400', 'cursor-not-allowed');
             }
+            
+            console.log("Button state updated. Enabled:", allFilled, "State valid:", stateValid);
         },
         
         // Submit billing form via traditional form submission
@@ -477,28 +513,64 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!form) return;
             
             // Clear any previously created billing inputs
-            const existingInputs = form.querySelectorAll('input[name^="billing["]');
+            const existingInputs = form.querySelectorAll('input[name^="billing"]');
             existingInputs.forEach(input => input.remove());
             
-            // Create hidden inputs for the billing data structure
+            // Remove standard inputs after we get their values
+            const nameValue = document.getElementById('name').value.trim();
+            const address1Value = document.getElementById('address1').value.trim();
+            const address2Value = document.getElementById('address2').value.trim() || '';
+            const cityValue = document.getElementById('city').value.trim();
+            const stateValue = document.getElementById('state').value.trim();
+            const postalCodeValue = document.getElementById('postal_code').value.trim();
+            const countryValue = document.getElementById('country').value.trim();
+            const phoneValue = document.getElementById('phone').value.trim();
+            const phonecodeValue = document.getElementById('phonecode').value.trim();
+            
+            // Remove standard form fields
+            document.getElementById('name')?.remove();
+            document.getElementById('address1')?.remove();
+            document.getElementById('address2')?.remove();
+            document.getElementById('city')?.remove();
+            document.getElementById('state')?.remove();
+            document.getElementById('postal_code')?.remove();
+            document.getElementById('country')?.remove();
+            document.getElementById('phone')?.remove();
+            document.getElementById('phonecode')?.remove();
+            
+            // Create structured billing data as per requirement
             const billingData = {
-                name: document.getElementById('name').value.trim(),
-                address1: document.getElementById('address1').value.trim(),
-                address2: document.getElementById('address2').value.trim(),
-                city: document.getElementById('city').value.trim(),
-                state: document.getElementById('state').value.trim(),
-                postal_code: document.getElementById('postal_code').value.trim(),
-                country: document.getElementById('country').value.trim(),
-                phone: `+${document.getElementById('phonecode').value}${document.getElementById('phone').value.trim()}`
+                user: {
+                    name: nameValue,
+                    phone: `+${phonecodeValue}${phoneValue}`
+                },
+                address: {
+                    line1: address1Value,
+                    line2: address2Value,
+                    state: stateValue,
+                    city: cityValue,
+                    country: countryValue,
+                    zipCode: postalCodeValue
+                }
             };
             
-            // Add hidden inputs to structure the data as {billing: {...}}
+            // Add hidden inputs to structure the data as {billing: {user: {...}, address: {...}}}
             Object.entries(billingData).forEach(([key, value]) => {
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = `billing[${key}]`;
-                hiddenInput.value = value;
-                form.appendChild(hiddenInput);
+                if (typeof value === 'object') {
+                    Object.entries(value).forEach(([subKey, subValue]) => {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `billing[${key}][${subKey}]`;
+                        hiddenInput.value = subValue;
+                        form.appendChild(hiddenInput);
+                    });
+                } else {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = `billing[${key}]`;
+                    hiddenInput.value = value;
+                    form.appendChild(hiddenInput);
+                }
             });
             
             // Set form action if needed (use current URL if not specified)
