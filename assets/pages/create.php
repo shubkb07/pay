@@ -36,7 +36,7 @@ function verify_email($email) {
     }
 }
 
-if (isset($_POST['email'])) {
+if (isset($options['email'])) {
     verify_email($options['email']);
 }
 
