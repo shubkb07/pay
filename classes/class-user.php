@@ -66,13 +66,17 @@ class User {
         // Fetch user data from the database.
         $users = $this->db->select_data('users', ['*'], ['email' => $email]);
 
+        echo 'User Data: ';
+        var_dump($users);
         if (!empty($users) && isset($users[0])) {
             $user_data = $users[0];
             $this->is_blocked = $user_data['account_status'] === 'blocked';
             $this->exists = true;
             return $user_data;
         } else {
+            echo 'User not found';
             $this->create($email);
+            return $this->fetch($email);
         }
 
         $this->exists = false;

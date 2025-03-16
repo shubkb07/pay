@@ -36,6 +36,10 @@ function verify_email($email) {
     }
 }
 
+if (isset($_POST['email'])) {
+    verify_email($_POST['email']);
+}
+
 if (isset($options['coupon']) && isset($options['email'])) {
     // If coupon and email key is set, then set $page = 'billing'.
     $page = 'billing';
