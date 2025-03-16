@@ -583,6 +583,33 @@ class Pay
     }
 
     /**
+     * Get Product.
+     */
+    public function get_product($product_id) {
+        global $db;
+        if (!isset($db) || !($db instanceof \Pay\Db)) {
+            $db = new \Pay\Db();
+        }
+
+        try {
+            $product = $db->select_data('products', ['*'], ['id' => $product_id]);
+
+            // If product not found, return null.
+            if (empty($product)) {
+                return null;
+            }
+
+            // Get the first (and should be only) product from the result.
+            $product = $product[0];
+        } catch (\Exception $e) {
+            error_log('Error retrieving product details: ' . $e->getMessage());
+            return null;
+        }
+
+        return $product;
+    }
+
+    /**
      * Currency Conversion.
      *
      * @param float $amount Amount to convert.
@@ -687,27 +714,10 @@ class Pay
             $db = new \Pay\Db();
         }
 
-        try {
-            $product = $db->select_data('products', ['*'], ['id' => $product_id]);
-
-            // If product not found, return null.
-            if (empty($product)) {
-                return null;
-            }
-
-            // Get the first (and should be only) product from the result.
-            $product = $product[0];
-        } catch (\Exception $e) {
-            error_log('Error retrieving product details: ' . $e->getMessage());
+        // Get product details.
+        $product = $this->get_product($product_id);
+        if (empty($product) || !is_array($product)) {
             return null;
-        }
-
-        // Expire in must be integer and more than 300 seconds.
-        if (!is_numeric($expire_in) || $expire_in < 300) {
-            $expire_in = $product['expire_in'];
-            if (empty($expire_in) || !is_numeric($expire_in) || $expire_in < 300) {
-                $expire_in = 3600;
-            }
         }
 
         $sub_amount = $product['price'];

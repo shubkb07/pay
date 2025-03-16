@@ -4,6 +4,8 @@
  * Create Payment Page.
  */
 
+use Pay\User;
+
 // Decode Pay ID.
 $options = jwt_decode_token($pay_id);
 
@@ -11,6 +13,27 @@ $options = jwt_decode_token($pay_id);
 if (!isset($options['product_id']) || !is_numeric($options['product_id'])) {
     include_once ASSETS . 'pages/404.php';
     exit;
+} else {
+    // If product_id is not present in the database, then 404.
+    $product = $pay->get_product($options['product_id']);
+    if (empty($product) || !isset($product['id']) || !is_array($product)) {
+        include_once ASSETS . 'pages/404.php';
+        exit;
+    }
+}
+
+/**
+ * Verify Email.
+ */
+function verify_email($email) {
+    // Check If email present in the database.
+    $user = new User($email);
+    if($user->exists) {
+        // If user exists, then check if the account is blocked.
+        if ($user->is_blocked) {
+            return 'blocked';
+        }
+    }
 }
 
 if (isset($options['coupon']) && isset($options['email'])) {
