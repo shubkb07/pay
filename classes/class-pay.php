@@ -553,6 +553,7 @@ class Pay
      * Can Coupon Be Applied.
      */
     public function can_coupon_be_applied($email, $coupon, $product_id) {
+        return true;
     }
 
     /**

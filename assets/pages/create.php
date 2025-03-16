@@ -6,6 +6,10 @@
 
 use Pay\User;
 
+// Global Variables.
+global $user_exists, $is_blocked, $page;
+$page = '';
+
 // Decode Pay ID.
 $options = jwt_decode_token($pay_id);
 
@@ -26,18 +30,76 @@ if (!isset($options['product_id']) || !is_numeric($options['product_id'])) {
  * Verify Email.
  */
 function verify_email($email) {
+    global $user_exists, $is_blocked;
     // Check If email present in the database.
     $user = new User($email);
     if($user->exists) {
+        $user_exists = true;
         // If user exists, then check if the account is blocked.
         if ($user->is_blocked) {
-            return 'blocked';
+            $is_blocked = true;
+        }
+    } else {
+        $user_exists = false;
+    }
+}
+
+// Check for Email.
+if (isset($options['email'])) {
+    verify_email($options['email']);
+} elseif (isset($_POST['email'])) {
+    verify_email($_POST['email']);
+    $options['email'] = $_POST['email'];
+    // Make JWT token with options and redirect to the same page with email in URL.
+    $token = jwt_create_token($options);
+    header('Location: /pay/c/' . $token);
+    exit;
+} else {
+    // If email is not set, then set $page = 'email'.
+    $page = 'email';
+}
+
+// Check for Coupon.
+if (isset($options['coupon'])) {
+    // If email is empty, remove coupon from options.
+    if (empty($options['email'])) {
+        unset($options['coupon']);
+        header('Location: /pay/c/' . jwt_create_token($options));
+        exit;
+    }
+    // If coupon is empty, then it is valid, else check.
+    if (!empty($options['coupon'])) {
+        $coupon = $pay->can_coupon_be_applied($options['email'], $options['coupon'], $options['product_id']);
+        if (!$coupon) {
+            unset($options['coupon']);
+            header('Location: /pay/c/' . jwt_create_token($options));
+            exit;
+        }
+    }
+} elseif (isset($_POST['coupon'])) {
+    $options['coupon'] = $_POST['coupon'];
+    // Make JWT token with options and redirect to the same page with coupon in URL.
+    $token = jwt_create_token($options);
+    header('Location: /pay/c/' . $token);
+    exit;
+} else {
+    // If page is not email, then check for coupon.
+    if ($page !== 'email') {
+        // Check, If product allows coupon.
+        if ($product['can_percentage_coupon_apply'] === '1' || $product['can_price_coupon_apply'] === '1' || $product['can_free_trial_coupon_apply'] === '1') {
+            // If coupon is not set, then set $page = 'coupon'.
+            $page = 'coupon';
+        } else {
+            // Set Empty Coupon, and redirect.
+            $options['coupon'] = '';
+            header('Location: /pay/c/' . jwt_create_token($options));
+            exit;
         }
     }
 }
 
-if (isset($options['email'])) {
-    verify_email($options['email']);
+if ($page !== 'email' && $page !== 'coupon') {
+    $page = 'billing';
 }
 
 if (isset($options['coupon']) && isset($options['email'])) {
